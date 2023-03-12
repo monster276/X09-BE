@@ -1,19 +1,27 @@
-require('dotenv').config()
-const cors = require('cors')
-const express = require('express')
-const { connectToDB } = require('./config/db')
-const multer = require('multer')
+require("dotenv").config();
+const cors = require("cors");
+const express = require("express");
+const { connectToDB } = require("./config/db");
+const multer = require("multer");
+const path = require("path");
 
-const path = require('path')
-const app = express()
-const port = process.env.PORT || 5000
+const courseRoutes = require("./routes/courseRoutes");
 
-app.use(cors('*'))
-app.use(express.json())
+const app = express();
 
+//Connect Mongo
+connectToDB();
 
-///Connect Mongo
-connectToDB()
-app.listen(port, () => {
-  console.log(`back end is running on port: ${port}`)
-})
+app.use(cors("*"));
+app.use(express.json());
+
+app.get("/", (req, res) => res.json({ msg: "Welcome to the API" }));
+
+// Define Routes
+app.use("/api/courses", courseRoutes);
+
+const PORT = process.env.PORT || 5000;
+
+app.listen(PORT, () => {
+  console.log(`back end is running on port: ${PORT}`);
+});
