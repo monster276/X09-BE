@@ -59,8 +59,56 @@ const createCourse = async (req, res) => {
   }
 };
 
+// @desc    Delete a Course
+// @route   DELETE /api/courses/:id
+// @access  Private/Admin
+const deleteCourse = async (req, res) => {
+  const course = await Course.findById(req.params.id);
+
+  if (course) {
+    await Course.findByIdAndRemove(req.params.id);
+    res.json({ message: "Course removed" });
+  } else {
+    res.status(404);
+    throw new Error("Book not found");
+  }
+};
+
+// @desc    Update a Course
+// @route   PUT /api/course/:id
+// @access  Private/Admin
+const updateCourse = async (req, res) => {
+  const {
+    name,
+    description,
+    courseTime,
+    classTime,
+    maxNumberOfStudents,
+    price,
+  } = req.body;
+
+  const course = await Course.findById(req.params.id);
+
+  if (course) {
+    course.name = name;
+    course.description = description;
+    course.courseTime = courseTime;
+    course.classTime = classTime;
+    course.maxNumberOfStudents = maxNumberOfStudents;
+    course.price = price;
+
+    const updateCourse = await course.save();
+    res.json(updateCourse);
+  } else {
+    res.status(404);
+    throw new Error("Course not found");
+  }
+};
+
 module.exports = {
   getCourses,
   getCourseById,
   createCourse,
+  deleteCourse,
+  updateCourse,
 };
