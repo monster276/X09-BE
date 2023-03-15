@@ -17,10 +17,6 @@ const courseSchema = mongoose.Schema({
     type: String,
     require: true,
   },
-  maxNumberOfStudents: {
-    type: Number,
-    require: true,
-  },
   price: {
     type: Number,
     require: true,

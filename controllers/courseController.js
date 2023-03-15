@@ -13,7 +13,7 @@ const getCourses = async (req, res) => {
   }
 };
 
-// @desc    Fetch single course
+// @desc    Fetch a single course
 // @route   GET /api/courses/:id
 // @access  Private/Admin
 const getCourseById = async (req, res) => {
@@ -27,7 +27,7 @@ const getCourseById = async (req, res) => {
   }
 };
 
-// @desc    Create a Course
+// @desc    Create a single Course
 // @route   POST /api/courses
 // @access  Private/Admin
 const createCourse = async (req, res) => {
@@ -59,7 +59,7 @@ const createCourse = async (req, res) => {
   }
 };
 
-// @desc    Delete a Course
+// @desc    Delete a single Course
 // @route   DELETE /api/courses/:id
 // @access  Private/Admin
 const deleteCourse = async (req, res) => {
@@ -74,8 +74,8 @@ const deleteCourse = async (req, res) => {
   }
 };
 
-// @desc    Update a Course
-// @route   PUT /api/course/:id
+// @desc    Update a single Course
+// @route   PUT /api/courses/:id
 // @access  Private/Admin
 const updateCourse = async (req, res) => {
   const {
