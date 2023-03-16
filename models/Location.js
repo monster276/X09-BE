@@ -2,20 +2,20 @@ const mongoose = require('mongoose')
 const LocationSchema = new mongoose.Schema({
   idLocation: {
     type: String,
-    require: true,
+    required: true,
   },
   fullName: {
     type: String,
-    require: true,
+    required: true,
     unique: true,
   },
   adress: {
     type: String,
-    require: true,
+    required: true,
   },
   status: {
     type: Object,
-    require: true,
+    required: true,
   },
 })
 module.exports = mongoose.model('Location', LocationSchema)

@@ -1,17 +1,17 @@
-const mongoose = require('mongoose')
+const mongoose = require("mongoose");
 const enrollCourseSchema = new mongoose.Schema({
   fullName: {
     type: String,
-    require: true,
+    required: true,
     unique: true,
   },
   email: {
     type: String,
-    require: true,
+    required: true,
   },
   phoneNumber: {
     type: Number,
-    require: true,
+    required: true,
   },
-})
-module.exports = mongoose.model('enrollCourse', enrollCourseSchema)
+});
+module.exports = mongoose.model("enrollCourse", enrollCourseSchema);
