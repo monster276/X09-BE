@@ -3,11 +3,11 @@ const mongoose = require("mongoose");
 const courseSchema = mongoose.Schema({
   name: {
     type: String,
-    require: true,
+    required: true,
   },
   description: {
     type: String,
-    require: true,
+    required: true,
   },
   courseTime: {
     type: String,
@@ -15,11 +15,11 @@ const courseSchema = mongoose.Schema({
   },
   classTime: {
     type: String,
-    require: true,
+    required: true,
   },
   price: {
     type: Number,
-    require: true,
+    required: true,
   },
 });
 
