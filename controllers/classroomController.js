@@ -31,12 +31,23 @@ const getClassroomById = async (req, res) => {
 // @route   POST /api/classrooms
 // @access  Private/Admin
 const createClassroom = async (req, res) => {
-  const { id, course, name, startTime, endTime, numberOfLessons, classTime } =
-    req.body;
+  const {
+    id,
+    user,
+    location,
+    course,
+    name,
+    startTime,
+    endTime,
+    numberOfLessons,
+    classTime,
+  } = req.body;
 
   try {
     const newClassroom = new Classroom({
       id,
+      user,
+      location,
       course,
       name,
       startTime,
@@ -73,12 +84,14 @@ const deleteClassroom = async (req, res) => {
 // @route   PUT /api/classrooms/:id
 // @access  Private/Admin
 const updateClassroom = async (req, res) => {
-  const { id, name, startTime, endTime, numberOfLessons, classTime } = req.body;
+  const { id, name, course, startTime, endTime, numberOfLessons, classTime } =
+    req.body;
 
   const classroom = await Classroom.findById(req.params.id);
 
   if (classroom) {
     classroom.id = id;
+    classroom.course = course;
     classroom.name = name;
     classroom.startTime = startTime;
     classroom.endTime = endTime;

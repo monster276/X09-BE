@@ -34,6 +34,7 @@ const createCourse = async (req, res) => {
   const {
     name,
     description,
+    image,
     courseTime,
     classTime,
     maxNumberOfStudents,
@@ -44,6 +45,7 @@ const createCourse = async (req, res) => {
     const newCourse = new Course({
       name,
       description,
+      image,
       courseTime,
       classTime,
       maxNumberOfStudents,
@@ -81,6 +83,7 @@ const updateCourse = async (req, res) => {
   const {
     name,
     description,
+    image,
     courseTime,
     classTime,
     maxNumberOfStudents,
@@ -92,6 +95,7 @@ const updateCourse = async (req, res) => {
   if (course) {
     course.name = name;
     course.description = description;
+    course.image = image;
     course.courseTime = courseTime;
     course.classTime = classTime;
     course.maxNumberOfStudents = maxNumberOfStudents;
