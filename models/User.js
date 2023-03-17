@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose')
 
 const userSchema = new mongoose.Schema(
   {
@@ -26,14 +26,14 @@ const userSchema = new mongoose.Schema(
     },
     phoneNumber: {
       type: Number,
-      require: String
+      require: String,
     },
     isAdmin: {
       type: Boolean,
       default: false,
     },
   },
-  { timestamps: true }
-);
-
-module.exports = mongoose.model("User", userSchema);
+  { timestamps: true },
+)
+const User = mongoose.model('User', userSchema)
+module.exports = User
