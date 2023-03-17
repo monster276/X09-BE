@@ -5,10 +5,9 @@ const { connectToDB } = require('./config/db')
 const multer = require('multer')
 const path = require('path')
 
-
 const courseRoutes = require('./routes/courseRoutes')
 const authRoutes = require('./routes/auth')
-const userRoutes = require('./routes/userRoute')
+
 const app = express()
 
 //Connect Mongo
@@ -20,10 +19,8 @@ app.use(express.json())
 app.get('/', (req, res) => res.json({ msg: 'Welcome to the API' }))
 
 // Define Routes
-app.use('/api/auth', authRoutes)
-app.use('/api/user', userRoutes)
-
 app.use('/api/courses', courseRoutes)
+app.use('/api/auth', authRoutes)
 
 const PORT = process.env.PORT || 5000
 
