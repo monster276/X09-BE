@@ -41,6 +41,7 @@ const createClassroom = async (req, res) => {
     endTime,
     numberOfLessons,
     classTime,
+    schedule,
   } = req.body;
 
   try {
@@ -54,6 +55,7 @@ const createClassroom = async (req, res) => {
       endTime,
       numberOfLessons,
       classTime,
+      schedule,
     });
 
     const classroom = await newClassroom.save();
