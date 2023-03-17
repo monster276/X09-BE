@@ -8,6 +8,6 @@
 
 ## 2.2. Sơ đồ cơ sở dữ liệu
 <p>
-    <img src="./readme_img/db.jpg">
+    <img src="./readme_img/db.png">
 </p>
 
