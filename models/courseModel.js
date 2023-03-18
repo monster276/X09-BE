@@ -31,6 +31,10 @@ const courseSchema = mongoose.Schema({
     type: Number,
     required: true,
   },
+  maxNumberOfStudents: {
+    type: Number,
+    required: true,
+  },
 });
 
 const Course = mongoose.model("Course", courseSchema);
