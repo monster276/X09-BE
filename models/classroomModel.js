@@ -41,6 +41,10 @@ const classroomSchema = mongoose.Schema({
     type: Number,
     required: true,
   },
+  schedule: {
+    type: [],
+    required: true,
+  },
 });
 
 const Classroom = mongoose.model("Classroom", classroomSchema);
