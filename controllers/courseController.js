@@ -32,6 +32,7 @@ const getCourseById = async (req, res) => {
 // @access  Private/Admin
 const createCourse = async (req, res) => {
   const {
+    id,
     name,
     description,
     image,
@@ -43,6 +44,7 @@ const createCourse = async (req, res) => {
 
   try {
     const newCourse = new Course({
+      id,
       name,
       description,
       image,
@@ -81,6 +83,7 @@ const deleteCourse = async (req, res) => {
 // @access  Private/Admin
 const updateCourse = async (req, res) => {
   const {
+    id,
     name,
     description,
     image,
@@ -93,6 +96,7 @@ const updateCourse = async (req, res) => {
   const course = await Course.findById(req.params.id);
 
   if (course) {
+    course.id = id;
     course.name = name;
     course.description = description;
     course.image = image;
