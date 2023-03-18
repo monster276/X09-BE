@@ -3,10 +3,11 @@ const path = require("path");
 const cors = require("cors");
 const express = require("express");
 const { connectToDB } = require("./config/db");
+const authRoutes = require("./routes/auth");
 const courseRoutes = require("./routes/courseRoutes");
 const classroomRoutes = require("./routes/classroomRoutes");
 const uploadRoutes = require("./routes/uploadRoutes");
-const authRoutes = require("./routes/auth");
+const locationRoutes = require("./routes/locationRoutes");
 
 //Connect Mongo
 connectToDB();
@@ -20,9 +21,10 @@ app.get("/", (req, res) => res.json({ msg: "Welcome to the API" }));
 
 // Define Routes
 app.use("/api/courses", courseRoutes);
-app.use("/api/classroom", classroomRoutes);
+app.use("/api/classrooms", classroomRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/upload", uploadRoutes);
+app.use("/api/locations", locationRoutes);
 
 const dirname = path.resolve();
 app.use("/uploads", express.static(path.join(dirname, "/uploads")));
