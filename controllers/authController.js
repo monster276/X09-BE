@@ -6,7 +6,7 @@ let refreshTokens = []
 
 const authController = {
   //REGISTER
-  registerUser: async (req, res) => {
+  createUser: async (req, res) => {
     try {
       console.log('hello')
       const salt = await bcrypt.genSalt(10)
