@@ -72,7 +72,7 @@ const deleteCourse = async (req, res) => {
     res.json({ message: "Course removed" });
   } else {
     res.status(404);
-    throw new Error("Book not found");
+    throw new Error("Course not found");
   }
 };
 
