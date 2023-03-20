@@ -2,12 +2,12 @@ const mongoose = require("mongoose");
 
 const courseSchema = mongoose.Schema({
   id: {
-    type: "String",
+    type: String,
     required: true,
     unique: true,
   },
   name: {
-    type: "String",
+    type: String,
     required: true,
     unique: true,
   },
