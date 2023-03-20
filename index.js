@@ -10,7 +10,7 @@ const courseRoutes = require("./routes/courseRoutes");
 const classroomRoutes = require("./routes/classroomRoutes");
 const uploadRoutes = require("./routes/uploadRoutes");
 const locationRoutes = require("./routes/locationRoutes");
-const lectureRoutes = require("./routes/LectureRoutes");
+const lectureRoutes = require("./routes/lectureRoutes");
 
 //Connect Mongo
 connectToDB();
