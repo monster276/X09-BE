@@ -1,4 +1,5 @@
 const Location = require("../models/LocationModel");
+const { validationResult } = require("express-validator");
 
 // @desc    Fetch all locations
 // @route   GET /api/locations
@@ -31,6 +32,12 @@ const getLocationById = async (req, res) => {
 // @route   POST /api/locations
 // @access  Private/Admin
 const createLocation = async (req, res) => {
+  const errors = validationResult(req);
+
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+
   const { id, name, address, status } = req.body;
 
   try {
@@ -69,6 +76,12 @@ const deleteLocation = async (req, res) => {
 // @route   PUT /api/locations/:id
 // @access  Private/Admin
 const updateLocation = async (req, res) => {
+  const errors = validationResult(req);
+
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+
   const { id, name, address, status } = req.body;
 
   const location = await Location.findById(req.params.id);
