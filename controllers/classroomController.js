@@ -1,4 +1,5 @@
 const Classroom = require("../models/classroomModel");
+const { validationResult } = require("express-validator");
 
 // @desc    Fetch all classrooms
 // @route   GET /api/classrooms
@@ -31,6 +32,12 @@ const getClassroomById = async (req, res) => {
 // @route   POST /api/classrooms
 // @access  Private/Admin
 const createClassroom = async (req, res) => {
+  const errors = validationResult(req);
+
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+
   const {
     id,
     user,
@@ -86,6 +93,12 @@ const deleteClassroom = async (req, res) => {
 // @route   PUT /api/classrooms/:id
 // @access  Private/Admin
 const updateClassroom = async (req, res) => {
+  const errors = validationResult(req);
+
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+
   const { id, name, course, startTime, endTime, numberOfLessons, classTime } =
     req.body;
 
