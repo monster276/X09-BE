@@ -1,4 +1,5 @@
 const Lecture = require("../models/lectureModel");
+const { validationResult } = require("express-validator");
 
 // @desc    Fetch all lectures
 // @route   GET /api/lectures
@@ -31,6 +32,12 @@ const getLecturesById = async (req, res) => {
 // @route   POST /api/lectures
 // @access  Private/Admin
 const createLecture = async (req, res) => {
+  const errors = validationResult(req);
+
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+
   const { course, name } = req.body;
 
   try {
@@ -67,6 +74,12 @@ const deleteLecture = async (req, res) => {
 // @route   DELETE /api/lectures/:id
 // @access  Private/Admin
 const updateLecture = async (req, res) => {
+  const errors = validationResult(req);
+
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+
   const { course, name } = req.body;
 
   const lecture = await Lecture.findById(req.params.id);

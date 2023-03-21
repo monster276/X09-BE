@@ -1,4 +1,5 @@
 const Course = require("../models/courseModel");
+const { validationResult } = require("express-validator");
 
 // @desc    Fetch all courses
 // @route   GET /api/courses
@@ -31,6 +32,12 @@ const getCourseById = async (req, res) => {
 // @route   POST /api/courses
 // @access  Private/Admin
 const createCourse = async (req, res) => {
+  const errors = validationResult(req);
+
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+
   const {
     id,
     name,
@@ -82,6 +89,12 @@ const deleteCourse = async (req, res) => {
 // @route   PUT /api/courses/:id
 // @access  Private/Admin
 const updateCourse = async (req, res) => {
+  const errors = validationResult(req);
+
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+
   const {
     id,
     name,
