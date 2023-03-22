@@ -5,13 +5,24 @@ const { validationResult } = require("express-validator");
 // @route   GET /api/locations
 // @access  Private/Admin
 const getLocations = async (req, res) => {
-  try {
-    const locations = await Location.find({});
-    res.json(locations);
-  } catch (err) {
-    console.error(err.message);
-    res.status(500).send("Server Error");
-  }
+  const pageSize = 10;
+  const page = Number(req.query.pageNumber) || 1;
+
+  const keyword = req.query.keyword
+    ? {
+        name: {
+          $regex: req.query.keyword,
+          $options: "i",
+        },
+      }
+    : {};
+
+  const count = await Location.countDocuments({ ...keyword });
+  const locations = await Location.find({ ...keyword })
+    .limit(pageSize)
+    .skip(pageSize * (page - 1));
+
+  res.json({ locations, page, pages: Math.ceil(count / pageSize) });
 };
 
 // @desc    Fetch a single location

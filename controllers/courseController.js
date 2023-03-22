@@ -5,13 +5,24 @@ const { validationResult } = require("express-validator");
 // @route   GET /api/courses
 // @access  Private/Admin
 const getCourses = async (req, res) => {
-  try {
-    const courses = await Course.find({});
-    res.json(courses);
-  } catch (err) {
-    console.error(err.message);
-    res.status(500).send("Server Error");
-  }
+  const pageSize = 10;
+  const page = Number(req.query.pageNumber) || 1;
+
+  const keyword = req.query.keyword
+    ? {
+        name: {
+          $regex: req.query.keyword,
+          $options: "i",
+        },
+      }
+    : {};
+
+  const count = await Course.countDocuments({ ...keyword });
+  const courses = await Course.find({ ...keyword })
+    .limit(pageSize)
+    .skip(pageSize * (page - 1));
+
+  res.json({ courses, page, pages: Math.ceil(count / pageSize) });
 };
 
 // @desc    Fetch a single course
