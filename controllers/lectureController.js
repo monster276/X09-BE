@@ -1,10 +1,11 @@
 const Lecture = require("../models/lectureModel");
+const asyncHandler = require("express-async-handler");
 const { validationResult } = require("express-validator");
 
 // @desc    Fetch all lectures
 // @route   GET /api/lectures
 // @access  Private/Admin
-const getLectures = async (req, res) => {
+const getLectures = asyncHandler(async (req, res) => {
   const pageSize = 10;
   const page = Number(req.query.pageNumber) || 1;
 
@@ -23,12 +24,12 @@ const getLectures = async (req, res) => {
     .skip(pageSize * (page - 1));
 
   res.json({ lectures, page, pages: Math.ceil(count / pageSize) });
-};
+});
 
 // @desc    Fetch a single lectures
 // @route   GET /api/lectures/:id
 // @access  Private/Admin
-const getLecturesById = async (req, res) => {
+const getLecturesById = asyncHandler(async (req, res) => {
   const lecture = await Lecture.findById(req.params.id);
 
   if (lecture) {
@@ -37,12 +38,12 @@ const getLecturesById = async (req, res) => {
     res.status(404);
     throw new Error("Lecture not found");
   }
-};
+});
 
 // @desc    Create a single lecture
 // @route   POST /api/lectures
 // @access  Private/Admin
-const createLecture = async (req, res) => {
+const createLecture = asyncHandler(async (req, res) => {
   const errors = validationResult(req);
 
   if (!errors.isEmpty()) {
@@ -64,12 +65,12 @@ const createLecture = async (req, res) => {
     console.error(err.message);
     res.status(500).send("Server Error");
   }
-};
+});
 
 // @desc    Delete a single lecture
 // @route   DELETE /api/lectures/:id
 // @access  Private/Admin
-const deleteLecture = async (req, res) => {
+const deleteLecture = asyncHandler(async (req, res) => {
   const lecture = await Lecture.findById(req.params.id);
 
   if (lecture) {
@@ -79,12 +80,12 @@ const deleteLecture = async (req, res) => {
     res.status(404);
     throw new Error("Lecture not found");
   }
-};
+});
 
 // @desc    Update a single lectures
 // @route   DELETE /api/lectures/:id
 // @access  Private/Admin
-const updateLecture = async (req, res) => {
+const updateLecture = asyncHandler(async (req, res) => {
   const errors = validationResult(req);
 
   if (!errors.isEmpty()) {
@@ -105,7 +106,7 @@ const updateLecture = async (req, res) => {
     res.status(404);
     throw new Error("Lecture not found");
   }
-};
+});
 
 module.exports = {
   getLectures,

@@ -1,10 +1,11 @@
 const Classroom = require("../models/classroomModel");
+const asyncHandler = require("express-async-handler");
 const { validationResult } = require("express-validator");
 
 // @desc    Fetch all classrooms
 // @route   GET /api/classrooms
 // @access  Private/Admin
-const getClassrooms = async (req, res) => {
+const getClassrooms = asyncHandler(async (req, res) => {
   const pageSize = 10;
   const page = Number(req.query.pageNumber) || 1;
 
@@ -23,12 +24,12 @@ const getClassrooms = async (req, res) => {
     .skip(pageSize * (page - 1));
 
   res.json({ classrooms, page, pages: Math.ceil(count / pageSize) });
-};
+});
 
 // @desc    Fetch a single classroom
 // @route   GET /api/classrooms/:id
 // @access  Private/Admin
-const getClassroomById = async (req, res) => {
+const getClassroomById = asyncHandler(async (req, res) => {
   const classroom = await Classroom.findById(req.params.id);
 
   if (classroom) {
@@ -37,12 +38,12 @@ const getClassroomById = async (req, res) => {
     res.status(404);
     throw new Error("Classroom not found");
   }
-};
+});
 
 // @desc    Create a single classroom
 // @route   POST /api/classrooms
 // @access  Private/Admin
-const createClassroom = async (req, res) => {
+const createClassroom = asyncHandler(async (req, res) => {
   const errors = validationResult(req);
 
   if (!errors.isEmpty()) {
@@ -83,12 +84,12 @@ const createClassroom = async (req, res) => {
     console.error(err.message);
     res.status(500).send("Server Error");
   }
-};
+});
 
 // @desc    Delete a single classroom
 // @route   DELETE /api/classroom/:id
 // @access  Private/Admin
-const deleteClassroom = async (req, res) => {
+const deleteClassroom = asyncHandler(async (req, res) => {
   const classroom = await Classroom.findById(req.params.id);
 
   if (classroom) {
@@ -98,12 +99,12 @@ const deleteClassroom = async (req, res) => {
     res.status(404);
     throw new Error("Classroom not found");
   }
-};
+});
 
 // @desc    Update a single classroom
 // @route   PUT /api/classrooms/:id
 // @access  Private/Admin
-const updateClassroom = async (req, res) => {
+const updateClassroom = asyncHandler(async (req, res) => {
   const errors = validationResult(req);
 
   if (!errors.isEmpty()) {
@@ -130,7 +131,7 @@ const updateClassroom = async (req, res) => {
     res.status(404);
     throw new Error("Classroom not found");
   }
-};
+});
 
 module.exports = {
   getClassrooms,

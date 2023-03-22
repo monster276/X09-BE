@@ -1,10 +1,11 @@
 const Location = require("../models/LocationModel");
+const asyncHandler = require("express-async-handler");
 const { validationResult } = require("express-validator");
 
 // @desc    Fetch all locations
 // @route   GET /api/locations
 // @access  Private/Admin
-const getLocations = async (req, res) => {
+const getLocations = asyncHandler(async (req, res) => {
   const pageSize = 10;
   const page = Number(req.query.pageNumber) || 1;
 
@@ -23,12 +24,12 @@ const getLocations = async (req, res) => {
     .skip(pageSize * (page - 1));
 
   res.json({ locations, page, pages: Math.ceil(count / pageSize) });
-};
+});
 
 // @desc    Fetch a single location
 // @route   GET /api/locations/:id
 // @access  Private/Admin
-const getLocationById = async (req, res) => {
+const getLocationById = asyncHandler(async (req, res) => {
   const location = await Location.findById(req.params.id);
 
   if (location) {
@@ -37,12 +38,12 @@ const getLocationById = async (req, res) => {
     res.status(404);
     throw new Error("Location not found");
   }
-};
+});
 
 // @desc    Create a single location
 // @route   POST /api/locations
 // @access  Private/Admin
-const createLocation = async (req, res) => {
+const createLocation = asyncHandler(async (req, res) => {
   const errors = validationResult(req);
 
   if (!errors.isEmpty()) {
@@ -66,12 +67,12 @@ const createLocation = async (req, res) => {
     console.error(err.message);
     res.status(500).send("Server Error");
   }
-};
+});
 
 // @desc    Delete a single location
 // @route   DELETE /api/locations/:id
 // @access  Private/Admin
-const deleteLocation = async (req, res) => {
+const deleteLocation = asyncHandler(async (req, res) => {
   const location = await Location.findById(req.params.id);
 
   if (location) {
@@ -81,12 +82,12 @@ const deleteLocation = async (req, res) => {
     res.status(404);
     throw new Error("Location is not found");
   }
-};
+});
 
 // @desc    Update a single location
 // @route   PUT /api/locations/:id
 // @access  Private/Admin
-const updateLocation = async (req, res) => {
+const updateLocation = asyncHandler(async (req, res) => {
   const errors = validationResult(req);
 
   if (!errors.isEmpty()) {
@@ -109,7 +110,7 @@ const updateLocation = async (req, res) => {
     res.status(404);
     throw new Error("Location not found");
   }
-};
+});
 
 module.exports = {
   getLocations,

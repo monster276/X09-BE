@@ -1,10 +1,11 @@
 const Course = require("../models/courseModel");
+const asyncHandler = require("express-async-handler");
 const { validationResult } = require("express-validator");
 
 // @desc    Fetch all courses
 // @route   GET /api/courses
 // @access  Private/Admin
-const getCourses = async (req, res) => {
+const getCourses = asyncHandler(async (req, res) => {
   const pageSize = 10;
   const page = Number(req.query.pageNumber) || 1;
 
@@ -23,12 +24,12 @@ const getCourses = async (req, res) => {
     .skip(pageSize * (page - 1));
 
   res.json({ courses, page, pages: Math.ceil(count / pageSize) });
-};
+});
 
 // @desc    Fetch a single course
 // @route   GET /api/courses/:id
 // @access  Private/Admin
-const getCourseById = async (req, res) => {
+const getCourseById = asyncHandler(async (req, res) => {
   const course = await Course.findById(req.params.id);
 
   if (course) {
@@ -37,12 +38,12 @@ const getCourseById = async (req, res) => {
     res.status(404);
     throw new Error("Course not found");
   }
-};
+});
 
 // @desc    Create a single Course
 // @route   POST /api/courses
 // @access  Private/Admin
-const createCourse = async (req, res) => {
+const createCourse = asyncHandler(async (req, res) => {
   const errors = validationResult(req);
 
   if (!errors.isEmpty()) {
@@ -79,12 +80,12 @@ const createCourse = async (req, res) => {
     console.error(err.message);
     res.status(500).send("Server Error");
   }
-};
+});
 
 // @desc    Delete a single Course
 // @route   DELETE /api/courses/:id
 // @access  Private/Admin
-const deleteCourse = async (req, res) => {
+const deleteCourse = asyncHandler(async (req, res) => {
   const course = await Course.findById(req.params.id);
 
   if (course) {
@@ -94,12 +95,12 @@ const deleteCourse = async (req, res) => {
     res.status(404);
     throw new Error("Course not found");
   }
-};
+});
 
 // @desc    Update a single Course
 // @route   PUT /api/courses/:id
 // @access  Private/Admin
-const updateCourse = async (req, res) => {
+const updateCourse = asyncHandler(async (req, res) => {
   const errors = validationResult(req);
 
   if (!errors.isEmpty()) {
@@ -135,7 +136,7 @@ const updateCourse = async (req, res) => {
     res.status(404);
     throw new Error("Course not found");
   }
-};
+});
 
 module.exports = {
   getCourses,
