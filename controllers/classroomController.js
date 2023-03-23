@@ -78,15 +78,15 @@ const createClassroom = asyncHandler(async (req, res) => {
       schedule,
     });
 
-    let testAccount = await nodemailer.createTestAccount();
+    // let testAccount = await nodemailer.createTestAccount();
 
     let transporter = nodemailer.createTransport({
-      host: "smtp.ethereal.email",
+      host: "sandbox.smtp.mailtrap.io",
       port: 587,
-      secure: false, // true for 465, false for other ports
+      secure: false,
       auth: {
-        user: testAccount.user, // generated ethereal user
-        pass: testAccount.pass, // generated ethereal password
+        user: "f3f5246b8879fc",
+        pass: "669c1065441968",
       },
     });
 
