@@ -18,7 +18,7 @@ router.post(
     .isString()
     .not()
     .isEmpty(),
-  body("name", "Name is string, Name is required").isString().not().isEmpty(),
+  body("name", "Name is a string, Name is required").isString().not().isEmpty(),
   createLecture
 );
 router.delete("/:id", deleteLecture);
