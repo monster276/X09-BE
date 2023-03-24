@@ -81,18 +81,18 @@ const createClassroom = asyncHandler(async (req, res) => {
     // let testAccount = await nodemailer.createTestAccount();
 
     let transporter = nodemailer.createTransport({
-      host: "sandbox.smtp.mailtrap.io",
-      port: 587,
-      secure: false,
+      host: "smtp.gmail.com",
+      port: 465,
+      secure: true,
       auth: {
-        user: "f3f5246b8879fc",
-        pass: "669c1065441968",
+        user: "nodemailtest0451@gmail.com",
+        pass: "obecdbodoifhctvo",
       },
     });
 
     // send mail with defined transport object
     let info = await transporter.sendMail({
-      from: '"Fred Foo 👻" <foo@example.com>', // sender address
+      from: '"nodemailtest0451@gmail.com', // sender address
       to: "trunghieu0451@gmail.com", // list of receivers
       subject: "Hello ✔", // Subject line
       text: "Hello world?", // plain text body
