@@ -11,6 +11,7 @@ const classroomRoutes = require("./routes/classroomRoutes");
 const uploadRoutes = require("./routes/uploadRoutes");
 const locationRoutes = require("./routes/locationRoutes");
 const lectureRoutes = require("./routes/lectureRoutes");
+const lessonRoutes = require("./routes/lessonRoutes");
 const studentRoutes = require("./routes/studentRoutes");
 
 //Connect Mongo
@@ -30,6 +31,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/upload", uploadRoutes);
 app.use("/api/locations", locationRoutes);
 app.use("/api/lectures", lectureRoutes);
+app.use("/api/lessons", lessonRoutes);
 app.use("/api/students", studentRoutes);
 
 const dirname = path.resolve();
