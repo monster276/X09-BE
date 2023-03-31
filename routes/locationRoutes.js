@@ -1,6 +1,9 @@
 const express = require("express");
 const router = express.Router();
 const { body } = require("express-validator");
+const {
+  verifyTokenAndUserAuthorization,
+} = require("../controllers/verifyToken");
 
 const {
   getLocations,
@@ -10,10 +13,11 @@ const {
   updateLocation,
 } = require("../controllers/locationController");
 
-router.get("/", getLocations);
-router.get("/:id", getLocationById);
+router.get("/", verifyTokenAndUserAuthorization, getLocations);
+router.get("/:id", verifyTokenAndUserAuthorization, getLocationById);
 router.post(
   "/",
+  verifyTokenAndUserAuthorization,
   body("id", "ID is string and ID is required, ID length must be less than 5")
     .isLength({ max: 5 })
     .isString()
@@ -33,9 +37,10 @@ router.post(
     .isEmpty(),
   createLocation
 );
-router.delete("/:id", deleteLocation);
+router.delete("/:id", verifyTokenAndUserAuthorization, deleteLocation);
 router.put(
   "/:id",
+  verifyTokenAndUserAuthorization,
   body("id", "ID is string and ID is required, ID length must be less than 5")
     .isLength({ max: 5 })
     .isString()
