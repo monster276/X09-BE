@@ -5,6 +5,7 @@ const express = require('express')
 const { connectToDB } = require('./config/db')
 
 // Routes
+<<<<<<< HEAD
 const authRoutes = require('./routes/auth')
 const courseRoutes = require('./routes/courseRoutes')
 const classroomRoutes = require('./routes/classroomRoutes')
@@ -13,6 +14,17 @@ const locationRoutes = require('./routes/locationRoutes')
 const lectureRoutes = require('./routes/lectureRoutes')
 const enrollCourseRoutes = require('./routes/enrollCourseRoutes')
 const userRoute = require("./routes/userRoute")
+=======
+const authRoutes = require("./routes/auth");
+const courseRoutes = require("./routes/courseRoutes");
+const classroomRoutes = require("./routes/classroomRoutes");
+const uploadRoutes = require("./routes/uploadRoutes");
+const locationRoutes = require("./routes/locationRoutes");
+const lectureRoutes = require("./routes/lectureRoutes");
+const lessonRoutes = require("./routes/lessonRoutes");
+const studentRoutes = require("./routes/studentRoutes");
+
+>>>>>>> 502615175cff8189f6f5f2ebf8082326865acce4
 //Connect Mongo
 connectToDB()
 
@@ -24,6 +36,7 @@ app.use(express.json())
 app.get('/', (req, res) => res.json({ msg: 'Welcome to the API' }))
 
 // Define Routes
+<<<<<<< HEAD
 app.use('/api/courses', courseRoutes)
 app.use('/api/classrooms', classroomRoutes)
 app.use('/api/auth', authRoutes)
@@ -34,6 +47,16 @@ app.use('/api/lectures', lectureRoutes)
 app.use('/api/enrollCourse', enrollCourseRoutes)
 const dirname = path.resolve()
 app.use('/uploads', express.static(path.join(dirname, '/uploads')))
+=======
+app.use("/api/courses", courseRoutes);
+app.use("/api/classrooms", classroomRoutes);
+app.use("/api/auth", authRoutes);
+app.use("/api/upload", uploadRoutes);
+app.use("/api/locations", locationRoutes);
+app.use("/api/lectures", lectureRoutes);
+app.use("/api/lessons", lessonRoutes);
+app.use("/api/students", studentRoutes);
+>>>>>>> 502615175cff8189f6f5f2ebf8082326865acce4
 
 const PORT = process.env.PORT || 5000
 

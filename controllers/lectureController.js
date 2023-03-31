@@ -26,7 +26,7 @@ const getLectures = asyncHandler(async (req, res) => {
   res.json({ lectures, page, pages: Math.ceil(count / pageSize) });
 });
 
-// @desc    Fetch a single lectures
+// @desc    Fetch a single lecture
 // @route   GET /api/lectures/:id
 // @access  Private/Admin
 const getLecturesById = asyncHandler(async (req, res) => {

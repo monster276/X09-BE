@@ -13,7 +13,7 @@ router.get("/", getClassrooms);
 router.get("/:id", getClassroomById);
 router.post(
   "/",
-  body("id", "ID is number, ID is required").isNumeric().not().isEmpty(),
+  body("id", "ID is string, ID is required").isString().not().isEmpty(),
   body("user", "User is string, User is required").isString().not().isEmpty(),
   body("location", "Location is string, User is required")
     .isString()

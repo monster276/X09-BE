@@ -11,14 +11,25 @@ const getCourses = asyncHandler(async (req, res) => {
 
   const keyword = req.query.keyword
     ? {
-        name: {
-          $regex: req.query.keyword,
-          $options: "i",
-        },
+        $or: [
+          {
+            id: {
+              $regex: req.query.keyword,
+              $options: "i",
+            },
+          },
+          {
+            name: {
+              $regex: req.query.keyword,
+              $options: "i",
+            },
+          },
+        ],
       }
     : {};
 
   const count = await Course.countDocuments({ ...keyword });
+
   const courses = await Course.find({ ...keyword })
     .limit(pageSize)
     .skip(pageSize * (page - 1));
