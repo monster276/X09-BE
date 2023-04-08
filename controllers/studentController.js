@@ -112,10 +112,39 @@ const updateStudent = asyncHandler(async (req, res) => {
   }
 });
 
+// @desc    Create new review
+// @route   POST /api/students/:id/rollcall
+// @access  Private/Teacher
+const createStudentRollCall = asyncHandler(async (req, res) => {
+  const { classroom, lesson, presence, score, comment } = req.body;
+
+  const student = await Student.findById(req.params.id);
+
+  if (student) {
+    const rollCall = {
+      classroom,
+      lesson,
+      presence,
+      score,
+      comment,
+    };
+
+    student.rollCall.push(rollCall);
+
+    await student.save();
+
+    res.status(201).json({ message: "roll call added" });
+  } else {
+    res.status(404);
+    throw new Error("Student not found");
+  }
+});
+
 module.exports = {
   getStudents,
   getStudentById,
   createStudent,
   deleteStudent,
   updateStudent,
+  createStudentRollCall,
 };

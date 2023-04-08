@@ -11,7 +11,7 @@ const {
 } = require("../controllers/locationController");
 
 router.get("/", getLocations);
-router.get("/:id", getLocationById);
+router.get("/:id",getLocationById);
 router.post(
   "/",
   body("id", "ID is string and ID is required, ID length must be less than 5")
