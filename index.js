@@ -18,6 +18,7 @@ const userRoute = require("./routes/userRoute")
 const authRoutes = require("./routes/auth");
 const courseRoutes = require("./routes/courseRoutes");
 const classroomRoutes = require("./routes/classroomRoutes");
+const attendancesRoutes = require("./routes/attendancesRoutes");
 const studentRoutes = require("./routes/studentRoutes");
 const uploadRoutes = require("./routes/uploadRoutes");
 const locationRoutes = require("./routes/locationRoutes");
@@ -52,6 +53,7 @@ app.use('/uploads', express.static(path.join(dirname, '/uploads')))
 =======
 app.use("/api/courses", courseRoutes);
 app.use("/api/classrooms", classroomRoutes);
+app.use("/api/attendances", attendancesRoutes);
 app.use("/api/students", studentRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/user", userRoute);
