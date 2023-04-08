@@ -7,7 +7,6 @@ const {
   createStudent,
   deleteStudent,
   updateStudent,
-  createStudentRollCall,
 } = require("../controllers/studentController");
 
 router.get("/", getStudents);
@@ -36,7 +35,6 @@ router.post(
     .isEmpty(),
   createStudent
 );
-router.post("/:id/rollcall", createStudentRollCall);
 router.delete("/:id", deleteStudent);
 router.put("/:id", updateStudent);
 
