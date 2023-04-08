@@ -14,12 +14,31 @@ const userController = {
   },
   //GET ALL USER
   getAllUsers: async (req, res) => {
-    try {
-      const user = await User.find()
-      res.status(200).json(user)
-    } catch (err) {
-      res.status(500).json(err)
-    }
+    const pageSize = 10
+    const page = Number(req.query.pageNumber) || 1
+    const keyword = req.query.keyword
+      ? {
+          $or: [
+            {
+              id: {
+                $regex: req.query.keyword,
+                $options: 'i',
+              },
+            },
+            {
+              name: {
+                $regex: req.query.keyword,
+                $options: 'i',
+              },
+            },
+          ],
+        }
+      : {}
+    const count = await User.countDocuments({ ...keyword })
+    const users = await User.find({ ...keyword })
+      .limit(pageSize)
+      .skip(pageSize * (page - 1))
+    res.json({ users, page, pages: Math.ceil(count / pageSize) })
   },
 
   //DELETE A USER
@@ -55,5 +74,5 @@ const userController = {
     }
   },
 }
-
+//https://www.youtube.com/watch?v=dWMeUg1kobM
 module.exports = userController
