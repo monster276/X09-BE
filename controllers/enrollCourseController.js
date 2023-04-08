@@ -1,17 +1,16 @@
 const enrollCourse = require('../models/enrollCourse')
+const Locations = require('../models/LocationModel')
 const { validationResult } = require('express-validator')
+const { query } = require('express')
 const enrollCourseController = {
   //CREATE ENROLL
   createEnroll: async (req, res) => {
     const errors = validationResult(req)
-
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() })
     }
     try {
       console.log('hello')
-
-      //Create new user
       const newenrollCoures = await new enrollCourse({
         fullName: req.body.fullName,
         email: req.body.email,
@@ -20,8 +19,7 @@ const enrollCourseController = {
         courseId: req.body.courseId,
         status: req.body.status,
       })
-
-      //Save user to DB
+      //Save to DB
       const enrollCourseNew = await newenrollCoures.save()
       res.status(200).json(enrollCourseNew)
     } catch (err) {
@@ -50,15 +48,7 @@ const enrollCourseController = {
       throw new Error('EnrollCourse is not found')
     }
   },
-  //GET ALL
   getListEnroll: async (req, res) => {
-    // try {
-    //   const enrollCourses = await enrollCourse.find()
-    //   res.status(200).json(enrollCourses)
-    // } catch (err) {
-    //   res.status(500).json(err)
-    // }
-
     const pageSize = 10
     const page = Number(req.query.pageNumber) || 1
     const keyword = req.query.keyword
@@ -69,14 +59,24 @@ const enrollCourseController = {
           },
         }
       : {}
-
-    const count = await enrollCourse.countDocuments({ ...keyword })
+    console.log('filter')
+    console.log(req.query)
+    const queryObj = { ...req.query }
+    const excludeFields = ['page', 'sort', 'limit', 'fields']
+    excludeFields.forEach((el) => delete queryObj[el])
+    console.log(req.query, query)
+    const count = await enrollCourse.countDocuments({})
     const enrollCourses = await enrollCourse
-      .find({ ...keyword })
+      .find(req.query)
       .limit(pageSize)
       .skip(pageSize * (page - 1))
-
-    res.json({ enrollCourses, page, pages: Math.ceil(count / pageSize) })
+    res.json({
+      status: 'done',
+      results: enrollCourses.length,
+      enrollCourses,
+      page,
+      pages: Math.ceil(count / pageSize),
+    })
   },
 }
 module.exports = enrollCourseController
