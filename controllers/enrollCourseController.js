@@ -18,6 +18,7 @@ const enrollCourseController = {
         phoneNumber: req.body.phoneNumber,
         locationId: req.body.locationId,
         courseId: req.body.courseId,
+        status: req.body.status,
       })
 
       //Save user to DB
