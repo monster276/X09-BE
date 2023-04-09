@@ -31,7 +31,10 @@ const getLessons = asyncHandler(async (req, res) => {
 // @route   GET /api/lessons/:id
 // @access  Private/Admin
 const getLessonsById = asyncHandler(async (req, res) => {
-  const lesson = await Lesson.findById(req.params.id);
+  const lesson = await Lesson.findById(req.params.id).populate(
+    "lecture",
+    "name"
+  );
 
   if (lesson) {
     res.json(lesson);

@@ -45,7 +45,10 @@ const getClassrooms = asyncHandler(async (req, res) => {
 // @route   GET /api/classrooms/:id
 // @access  Private/Admin
 const getClassroomById = asyncHandler(async (req, res) => {
-  const classroom = await Classroom.findById(req.params.id);
+  const classroom = await Classroom.findById(req.params.id)
+    .populate("user", "fullName")
+    .populate("location", "name")
+    .populate("course", "name");
 
   if (classroom) {
     res.json(classroom);
