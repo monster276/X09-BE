@@ -59,15 +59,14 @@ const enrollCourseController = {
           },
         }
       : {}
-    console.log('filter')
-    console.log(req.query)
+
     const queryObj = { ...req.query }
     const excludeFields = ['page', 'sort', 'limit', 'fields']
     excludeFields.forEach((el) => delete queryObj[el])
-    console.log(req.query, query)
     const count = await enrollCourse.countDocuments({})
     const enrollCourses = await enrollCourse
-      .find()
+      .find(req.query)
+      .find({ status: '1' })
       .limit(pageSize)
       .skip(pageSize * (page - 1))
       .populate('location', 'name ')
