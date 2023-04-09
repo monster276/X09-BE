@@ -21,7 +21,8 @@ const getLectures = asyncHandler(async (req, res) => {
   const count = await Lecture.countDocuments({ ...keyword });
   const lectures = await Lecture.find({ ...keyword })
     .limit(pageSize)
-    .skip(pageSize * (page - 1));
+    .skip(pageSize * (page - 1))
+    .populate("course", "name");
 
   res.json({ lectures, page, pages: Math.ceil(count / pageSize) });
 });
@@ -30,7 +31,10 @@ const getLectures = asyncHandler(async (req, res) => {
 // @route   GET /api/lectures/:id
 // @access  Private/Admin
 const getLecturesById = asyncHandler(async (req, res) => {
-  const lecture = await Lecture.findById(req.params.id);
+  const lecture = await Lecture.findById(req.params.id).populate(
+    "course",
+    "name"
+  );
 
   if (lecture) {
     res.json(lecture);

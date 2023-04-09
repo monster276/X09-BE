@@ -34,14 +34,21 @@ const getClassrooms = asyncHandler(async (req, res) => {
   const classrooms = await Classroom.find({ ...keyword })
     .limit(pageSize)
     .skip(pageSize * (page - 1))
-  res.json({ classrooms, page, pages: Math.ceil(count / pageSize) })
-})
+    .populate("user", "fullName")
+    .populate("location", "name")
+    .populate("course", "name");
+
+  res.json({ classrooms, page, pages: Math.ceil(count / pageSize) });
+});
 
 // @desc    Fetch a single classroom
 // @route   GET /api/classrooms/:id
-// @access  Private/Admin
+// @access  Private/Admi
 const getClassroomById = asyncHandler(async (req, res) => {
   const classroom = await Classroom.findById(req.params.id)
+    .populate("user", "fullName")
+    .populate("location", "name")
+    .populate("course", "name");
 
   if (classroom) {
     res.json(classroom)

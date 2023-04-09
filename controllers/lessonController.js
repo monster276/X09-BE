@@ -21,7 +21,8 @@ const getLessons = asyncHandler(async (req, res) => {
   const count = await Lesson.countDocuments({ ...keyword });
   const lessons = await Lesson.find({ ...keyword })
     .limit(pageSize)
-    .skip(pageSize * (page - 1));
+    .skip(pageSize * (page - 1))
+    .populate("lecture", "name");
 
   res.json({ lessons, page, pages: Math.ceil(count / pageSize) });
 });
@@ -30,7 +31,10 @@ const getLessons = asyncHandler(async (req, res) => {
 // @route   GET /api/lessons/:id
 // @access  Private/Admin
 const getLessonsById = asyncHandler(async (req, res) => {
-  const lesson = await Lesson.findById(req.params.id);
+  const lesson = await Lesson.findById(req.params.id).populate(
+    "lecture",
+    "name"
+  );
 
   if (lesson) {
     res.json(lesson);

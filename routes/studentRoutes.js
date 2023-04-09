@@ -7,17 +7,12 @@ const {
   createStudent,
   deleteStudent,
   updateStudent,
-  createStudentRollCall,
 } = require("../controllers/studentController");
 
 router.get("/", getStudents);
 router.get("/:id", getStudentById);
 router.post(
   "/",
-  body("classroom", "classroom is string and Classroom is required")
-    .isString()
-    .not()
-    .isEmpty(),
   body("fullName", "fullName is string and full name is required")
     .isString()
     .not()
@@ -36,7 +31,6 @@ router.post(
     .isEmpty(),
   createStudent
 );
-router.post("/:id/rollcall", createStudentRollCall);
 router.delete("/:id", deleteStudent);
 router.put("/:id", updateStudent);
 
