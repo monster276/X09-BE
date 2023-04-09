@@ -21,7 +21,8 @@ const getLectures = asyncHandler(async (req, res) => {
   const count = await Lecture.countDocuments({ ...keyword });
   const lectures = await Lecture.find({ ...keyword })
     .limit(pageSize)
-    .skip(pageSize * (page - 1));
+    .skip(pageSize * (page - 1))
+    .populate("course", "name");
 
   res.json({ lectures, page, pages: Math.ceil(count / pageSize) });
 });

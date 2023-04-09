@@ -33,4 +33,4 @@ const attendancesSchema = new mongoose.Schema({
   attendances: [attendanceSchema],
 });
 
-module.exports = mongoose.model("attendances", attendancesSchema);
+module.exports = mongoose.model("studentAttendance", attendancesSchema);

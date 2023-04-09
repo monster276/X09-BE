@@ -33,7 +33,10 @@ const getClassrooms = asyncHandler(async (req, res) => {
 
   const classrooms = await Classroom.find({ ...keyword })
     .limit(pageSize)
-    .skip(pageSize * (page - 1));
+    .skip(pageSize * (page - 1))
+    .populate("user", "username")
+    .populate("location", "name")
+    .populate("course", "name");
 
   res.json({ classrooms, page, pages: Math.ceil(count / pageSize) });
 });

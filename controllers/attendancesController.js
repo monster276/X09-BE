@@ -30,21 +30,24 @@ const getAttendances = asyncHandler(async (req, res) => {
 
   const count = await Attendances.countDocuments({ ...keyword });
 
-  const attendances = await Attendances.find({ ...keyword })
+  const studentsAttendances = await Attendances.find({ ...keyword })
     .limit(pageSize)
-    .skip(pageSize * (page - 1));
-
-  res.json({ attendances, page, pages: Math.ceil(count / pageSize) });
+    .skip(pageSize * (page - 1))
+    .populate("student", "fullName")
+    .populate("classroom", "name");
+  res.json({ studentsAttendances, page, pages: Math.ceil(count / pageSize) });
 });
 
 // @desc    Fetch a single attendance
 // @route   GET /api/attendances/:id
 // @access  Private/Teacher
 const getAttendancesById = asyncHandler(async (req, res) => {
-  const attendance = await Attendances.findById(req.params.id);
+  const studentAttendances = await Attendances.findById(req.params.id)
+    .populate("student", "fullName")
+    .populate("classroom", "name");
 
-  if (attendance) {
-    res.json(attendance);
+  if (studentAttendances) {
+    res.json(studentAttendances);
   } else {
     res.status(404);
     throw new Error("Attendance not found");
@@ -64,14 +67,14 @@ const createAttendances = asyncHandler(async (req, res) => {
   const { student, classroom } = req.body;
 
   try {
-    const newAttendances = new Attendances({
+    const newStudentAttendances = new Attendances({
       student,
       classroom,
     });
 
-    const attendances = await newAttendances.save();
+    const studentAttendances = await newStudentAttendances.save();
 
-    res.json(attendances);
+    res.json(studentAttendances);
   } catch (err) {
     console.error(err.message);
     res.status(500).send("Server Error");
@@ -84,9 +87,11 @@ const createAttendances = asyncHandler(async (req, res) => {
 const createStudentAttendance = asyncHandler(async (req, res) => {
   const { lesson, presence, score, comment } = req.body;
 
-  const studentAttendance = await Attendances.findById(req.params.id);
+  const studentAttendances = await Attendances.findById(req.params.id)
+    .populate("student", "fullName")
+    .populate("classroom", "name");
 
-  if (studentAttendance) {
+  if (studentAttendances) {
     const attendance = {
       lesson,
       presence,
@@ -94,9 +99,9 @@ const createStudentAttendance = asyncHandler(async (req, res) => {
       comment,
     };
 
-    studentAttendance.attendances.push(attendance);
+    studentAttendances.attendances.push(attendance);
 
-    await studentAttendance.save();
+    await studentAttendances.save();
 
     res.status(201).json({ message: "attendance added" });
   } else {
@@ -109,9 +114,9 @@ const createStudentAttendance = asyncHandler(async (req, res) => {
 // @route   DELETE /api/attendances/:id
 // @access  Private/Teacher
 const deleteAttendances = asyncHandler(async (req, res) => {
-  const attendances = await Attendances.findById(req.params.id);
+  const studentAttendances = await Attendances.findById(req.params.id);
 
-  if (attendances) {
+  if (studentAttendances) {
     await Attendances.findByIdAndRemove(req.params.id);
     res.json({ message: "Attendances removed" });
   } else {
@@ -132,14 +137,14 @@ const updateAttendances = asyncHandler(async (req, res) => {
 
   const { student, classroom } = req.body;
 
-  const attendances = await Attendances.findById(req.params.id);
+  const studentAttendances = await Attendances.findById(req.params.id);
 
-  if (attendances) {
-    attendances.student = student;
-    attendances.classroom = classroom;
+  if (studentAttendances) {
+    studentAttendances.student = student;
+    studentAttendances.classroom = classroom;
 
-    const updateAttendances = await attendances.save();
-    res.json(updateAttendances);
+    const updateStudentAttendances = await studentAttendances.save();
+    res.json(updateStudentAttendances);
   } else {
     res.status(404);
     throw new Error("Attendances not found");
