@@ -67,11 +67,11 @@ const enrollCourseController = {
     console.log(req.query, query)
     const count = await enrollCourse.countDocuments({})
     const enrollCourses = await enrollCourse
-      .find(req.query)
+      .find()
       .limit(pageSize)
       .skip(pageSize * (page - 1))
-      .populate('location', 'name -_id')
-      .populate('course', 'name -_id')
+      .populate('location', 'name ')
+      .populate('course', 'name ')
     res.json({
       status: 'done',
       results: enrollCourses.length,
