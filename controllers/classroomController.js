@@ -34,7 +34,7 @@ const getClassrooms = asyncHandler(async (req, res) => {
   const classrooms = await Classroom.find({ ...keyword })
     .limit(pageSize)
     .skip(pageSize * (page - 1))
-    .populate("user", "username")
+    .populate("user", "fullName")
     .populate("location", "name")
     .populate("course", "name");
 
