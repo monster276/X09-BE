@@ -15,8 +15,8 @@ const enrollCourseController = {
         fullName: req.body.fullName,
         email: req.body.email,
         phoneNumber: req.body.phoneNumber,
-        locationId: req.body.locationId,
-        courseId: req.body.courseId,
+        location: req.body.location,
+        course: req.body.course,
         status: req.body.status,
       })
       //Save to DB
@@ -70,6 +70,8 @@ const enrollCourseController = {
       .find(req.query)
       .limit(pageSize)
       .skip(pageSize * (page - 1))
+      .populate('location', 'name -_id')
+      .populate('course', 'name -_id')
     res.json({
       status: 'done',
       results: enrollCourses.length,
