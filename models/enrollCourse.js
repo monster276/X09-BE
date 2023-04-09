@@ -14,15 +14,15 @@ const enrollCourseSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
-    locationId: {
+    location: {
       type: mongoose.Schema.Types.ObjectId,
+      required: true,
       ref: 'Location',
-      required: true,
     },
-    courseId: {
+    course: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'Course',
       required: true,
+      ref: 'Course',
     },
     status: {
       type: Number,
