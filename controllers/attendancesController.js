@@ -85,11 +85,15 @@ const createAttendances = asyncHandler(async (req, res) => {
 // @route   POST /api/attendances/:id/attendance
 // @access  Private/Teacher
 const createStudentAttendance = asyncHandler(async (req, res) => {
+  const errors = validationResult(req);
+
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+
   const { lesson, presence, score, comment } = req.body;
 
-  const studentAttendances = await Attendances.findById(req.params.id)
-    .populate("student", "fullName")
-    .populate("classroom", "name");
+  const studentAttendances = await Attendances.findById(req.params.id);
 
   if (studentAttendances) {
     const attendance = {

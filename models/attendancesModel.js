@@ -11,11 +11,11 @@ const attendanceSchema = mongoose.Schema({
   },
   score: {
     type: Number,
-    required: false,
+    required: true,
   },
   comment: {
     type: String,
-    required: false,
+    required: true,
   },
 });
 
