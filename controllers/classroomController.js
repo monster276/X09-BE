@@ -1,14 +1,14 @@
-const Classroom = require("../models/classroomModel");
-const asyncHandler = require("express-async-handler");
-const { validationResult } = require("express-validator");
-const sendEmail = require("../utils/sendEmail");
+const Classroom = require('../models/classroomModel')
+const asyncHandler = require('express-async-handler')
+const { validationResult } = require('express-validator')
+const sendEmail = require('../utils/sendEmail')
 
 // @desc    Fetch all classrooms
 // @route   GET /api/classrooms
 // @access  Private/Admin
 const getClassrooms = asyncHandler(async (req, res) => {
-  const pageSize = 10;
-  const page = Number(req.query.pageNumber) || 1;
+  const pageSize = 10
+  const page = Number(req.query.pageNumber) || 1
 
   const keyword = req.query.keyword
     ? {
@@ -16,20 +16,20 @@ const getClassrooms = asyncHandler(async (req, res) => {
           {
             id: {
               $regex: req.query.keyword,
-              $options: "i",
+              $options: 'i',
             },
           },
           {
             name: {
               $regex: req.query.keyword,
-              $options: "i",
+              $options: 'i',
             },
           },
         ],
       }
-    : {};
+    : {}
 
-  const count = await Classroom.countDocuments({ ...keyword });
+  const count = await Classroom.countDocuments({ ...keyword })
 
   const classrooms = await Classroom.find({ ...keyword })
     .limit(pageSize)
@@ -51,21 +51,21 @@ const getClassroomById = asyncHandler(async (req, res) => {
     .populate("course", "name");
 
   if (classroom) {
-    res.json(classroom);
+    res.json(classroom)
   } else {
-    res.status(404);
-    throw new Error("Classroom not found");
+    res.status(404)
+    throw new Error('Classroom not found')
   }
-});
+})
 
 // @desc    Create a single classroom
 // @route   POST /api/classrooms
 // @access  Private/Admin
 const createClassroom = asyncHandler(async (req, res) => {
-  const errors = validationResult(req);
+  const errors = validationResult(req)
 
   if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
+    return res.status(400).json({ errors: errors.array() })
   }
 
   const {
@@ -79,7 +79,7 @@ const createClassroom = asyncHandler(async (req, res) => {
     numberOfLessons,
     classTime,
     schedule,
-  } = req.body;
+  } = req.body
 
   try {
     const newClassroom = new Classroom({
@@ -93,65 +93,72 @@ const createClassroom = asyncHandler(async (req, res) => {
       numberOfLessons,
       classTime,
       schedule,
-    });
+    })
 
-    const classroom = await newClassroom.save();
+    const classroom = await newClassroom.save()
 
-    sendEmail();
+    sendEmail()
 
-    res.json(classroom);
+    res.json(classroom)
   } catch (err) {
-    console.error(err.message);
-    res.status(500).send("Server Error");
+    console.error(err.message)
+    res.status(500).send('Server Error')
   }
-});
+})
 
 // @desc    Delete a single classroom
 // @route   DELETE /api/classroom/:id
 // @access  Private/Admin
 const deleteClassroom = asyncHandler(async (req, res) => {
-  const classroom = await Classroom.findById(req.params.id);
+  const classroom = await Classroom.findById(req.params.id)
 
   if (classroom) {
-    await Classroom.findByIdAndDelete(req.params.id);
-    res.json({ message: "Classroom removed" });
+    await Classroom.findByIdAndDelete(req.params.id)
+    res.json({ message: 'Classroom removed' })
   } else {
-    res.status(404);
-    throw new Error("Classroom not found");
+    res.status(404)
+    throw new Error('Classroom not found')
   }
-});
+})
 
 // @desc    Update a single classroom
 // @route   PUT /api/classrooms/:id
 // @access  Private/Admin
 const updateClassroom = asyncHandler(async (req, res) => {
-  const errors = validationResult(req);
+  const errors = validationResult(req)
 
   if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
+    return res.status(400).json({ errors: errors.array() })
   }
 
-  const { id, name, course, startTime, endTime, numberOfLessons, classTime } =
-    req.body;
+  const {
+    id,
+    name,
+    course,
+    startTime,
+    endTime,
+    numberOfLessons,
+    classTime,
+  } = req.body
 
-  const classroom = await Classroom.findById(req.params.id);
+  const classroom = await Classroom.findById(req.params.id)
 
   if (classroom) {
-    classroom.id = id;
-    classroom.course = course;
-    classroom.name = name;
-    classroom.startTime = startTime;
-    classroom.endTime = endTime;
-    classroom.numberOfLessons = numberOfLessons;
-    classroom.classTime = classTime;
+    classroom.id = id
+    classroom.course = course
+    classroom.name = name
+    classroom.startTime = startTime
+    classroom.endTime = endTime
+    classroom.numberOfLessons = numberOfLessons
+    classroom.classTime = classTime
 
-    const updateClassroom = await classroom.save();
-    res.json(updateClassroom);
+    const updateClassroom = await classroom.save()
+    res.json(updateClassroom)
   } else {
-    res.status(404);
-    throw new Error("Classroom not found");
+    res.status(404)
+    throw new Error('Classroom not found')
   }
-});
+})
 
 module.exports = {
   getClassrooms,
@@ -159,4 +166,4 @@ module.exports = {
   createClassroom,
   deleteClassroom,
   updateClassroom,
-};
+}
