@@ -28,9 +28,15 @@ const getAttendances = asyncHandler(async (req, res) => {
       }
     : {};
 
+  const queryObj = { ...req.query };
+
+  const excludeFields = ["page", "sort", "limit", "fields"];
+  excludeFields.forEach((el) => delete queryObj[el]);
+
   const count = await Attendances.countDocuments({ ...keyword });
 
   const studentsAttendances = await Attendances.find({ ...keyword })
+    .find(req.query)
     .limit(pageSize)
     .skip(pageSize * (page - 1))
     .populate("student", "fullName")

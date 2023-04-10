@@ -1,11 +1,11 @@
 const Classroom = require("../models/classroomModel");
 const asyncHandler = require("express-async-handler");
 const { validationResult } = require("express-validator");
-const sendEmail = require("../utils/sendEmail");
+// const sendEmail = require("../utils/sendEmail");
 
 // @desc    Fetch all classrooms
 // @route   GET /api/classrooms
-// @access  Private/Admin
+// @access  Private/Teacher
 const getClassrooms = asyncHandler(async (req, res) => {
   const pageSize = 10;
   const page = Number(req.query.pageNumber) || 1;
@@ -16,13 +16,13 @@ const getClassrooms = asyncHandler(async (req, res) => {
           {
             id: {
               $regex: req.query.keyword,
-              $options: "i",
+              $options: "x",
             },
           },
           {
             name: {
               $regex: req.query.keyword,
-              $options: "i",
+              $options: "x",
             },
           },
         ],
@@ -43,7 +43,7 @@ const getClassrooms = asyncHandler(async (req, res) => {
 
 // @desc    Fetch a single classroom
 // @route   GET /api/classrooms/:id
-// @access  Private/Admin
+// @access  Private/Teacher
 const getClassroomById = asyncHandler(async (req, res) => {
   const classroom = await Classroom.findById(req.params.id)
     .populate("user", "fullName")
@@ -60,7 +60,7 @@ const getClassroomById = asyncHandler(async (req, res) => {
 
 // @desc    Create a single classroom
 // @route   POST /api/classrooms
-// @access  Private/Admin
+// @access  Private/Teacher
 const createClassroom = asyncHandler(async (req, res) => {
   const errors = validationResult(req);
 
@@ -97,7 +97,7 @@ const createClassroom = asyncHandler(async (req, res) => {
 
     const classroom = await newClassroom.save();
 
-    sendEmail();
+    // sendEmail();
 
     res.json(classroom);
   } catch (err) {
@@ -108,7 +108,7 @@ const createClassroom = asyncHandler(async (req, res) => {
 
 // @desc    Delete a single classroom
 // @route   DELETE /api/classroom/:id
-// @access  Private/Admin
+// @access  Private/Teacher
 const deleteClassroom = asyncHandler(async (req, res) => {
   const classroom = await Classroom.findById(req.params.id);
 
@@ -123,7 +123,7 @@ const deleteClassroom = asyncHandler(async (req, res) => {
 
 // @desc    Update a single classroom
 // @route   PUT /api/classrooms/:id
-// @access  Private/Admin
+// @access  Private/Teacher
 const updateClassroom = asyncHandler(async (req, res) => {
   const errors = validationResult(req);
 
