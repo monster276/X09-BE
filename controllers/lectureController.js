@@ -4,7 +4,7 @@ const { validationResult } = require("express-validator");
 
 // @desc    Fetch all lectures
 // @route   GET /api/lectures
-// @access  Private/Admin
+// @access  Private/Teacher
 const getLectures = asyncHandler(async (req, res) => {
   const pageSize = 10;
   const page = Number(req.query.pageNumber) || 1;
@@ -29,7 +29,7 @@ const getLectures = asyncHandler(async (req, res) => {
 
 // @desc    Fetch a single lecture
 // @route   GET /api/lectures/:id
-// @access  Private/Admin
+// @access  Private/Teacher
 const getLecturesById = asyncHandler(async (req, res) => {
   const lecture = await Lecture.findById(req.params.id).populate(
     "course",
@@ -46,7 +46,7 @@ const getLecturesById = asyncHandler(async (req, res) => {
 
 // @desc    Create a single lecture
 // @route   POST /api/lectures
-// @access  Private/Admin
+// @access  Private/Teacher
 const createLecture = asyncHandler(async (req, res) => {
   const errors = validationResult(req);
 
@@ -73,7 +73,7 @@ const createLecture = asyncHandler(async (req, res) => {
 
 // @desc    Delete a single lecture
 // @route   DELETE /api/lectures/:id
-// @access  Private/Admin
+// @access  Private/Teacher
 const deleteLecture = asyncHandler(async (req, res) => {
   const lecture = await Lecture.findById(req.params.id);
 
@@ -88,7 +88,7 @@ const deleteLecture = asyncHandler(async (req, res) => {
 
 // @desc    Update a single lectures
 // @route   DELETE /api/lectures/:id
-// @access  Private/Admin
+// @access  Private/Teacher
 const updateLecture = asyncHandler(async (req, res) => {
   const errors = validationResult(req);
 
