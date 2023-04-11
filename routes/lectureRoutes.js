@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { body } = require("express-validator");
+const lectureValidators = require("../validators/lectureValidators");
 
 const {
   getLectures,
@@ -12,24 +12,8 @@ const {
 
 router.get("/", getLectures);
 router.get("/:id", getLecturesById);
-router.post(
-  "/",
-  body("course", "Course is string, Course is required")
-    .isString()
-    .not()
-    .isEmpty(),
-  body("name", "Name is a string, Name is required").isString().not().isEmpty(),
-  createLecture
-);
+router.post("/", lectureValidators, createLecture);
 router.delete("/:id", deleteLecture);
-router.put(
-  "/:id",
-  body("course", "Course is string, Course is required")
-    .isString()
-    .not()
-    .isEmpty(),
-  body("name", "Name is string, Name is required").isString().not().isEmpty(),
-  updateLecture
-);
+router.put("/:id", lectureValidators, updateLecture);
 
 module.exports = router;
