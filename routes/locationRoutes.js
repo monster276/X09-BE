@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { body } = require("express-validator");
+const locationValidators = require("../validators/locationValidators");
 
 const {
   getLocations,
@@ -11,49 +11,9 @@ const {
 } = require("../controllers/locationController");
 
 router.get("/", getLocations);
-router.get("/:id",getLocationById);
-router.post(
-  "/",
-  body("id", "ID is string and ID is required, ID length must be less than 5")
-    .isLength({ max: 5 })
-    .isString()
-    .not()
-    .isEmpty(),
-  body("name", "Name is string and Name is required")
-    .isString()
-    .not()
-    .isEmpty(),
-  body("address", "Address is string and Address is required")
-    .isString()
-    .not()
-    .isEmpty(),
-  body("status", "Status is boolean and Status is required")
-    .isBoolean()
-    .not()
-    .isEmpty(),
-  createLocation
-);
+router.get("/:id", getLocationById);
+router.post("/", locationValidators, createLocation);
 router.delete("/:id", deleteLocation);
-router.put(
-  "/:id",
-  body("id", "ID is string and ID is required, ID length must be less than 5")
-    .isLength({ max: 5 })
-    .isString()
-    .not()
-    .isEmpty(),
-  body("name", "Name is string and Name is required")
-    .isString()
-    .not()
-    .isEmpty(),
-  body("address", "Address is string and Address is required")
-    .isString()
-    .not()
-    .isEmpty(),
-  body("status", "Status is boolean and Status is required")
-    .isBoolean()
-    .not()
-    .isEmpty(),
-  updateLocation
-);
+router.put("/:id", locationValidators, updateLocation);
 
 module.exports = router;
