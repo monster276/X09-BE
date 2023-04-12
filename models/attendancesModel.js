@@ -17,6 +17,10 @@ const attendanceSchema = mongoose.Schema({
     type: String,
     required: false,
   },
+  createAt: {
+    type: Date,
+    default: Date.now,
+  },
 });
 
 const attendancesSchema = new mongoose.Schema({

@@ -36,6 +36,7 @@ const getAttendances = asyncHandler(async (req, res) => {
   const count = await Attendances.countDocuments({ ...keyword });
 
   const studentsAttendances = await Attendances.find({ ...keyword })
+    .sort({ createAt: -1 })
     .find(req.query)
     .limit(pageSize)
     .skip(pageSize * (page - 1))

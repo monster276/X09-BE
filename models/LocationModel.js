@@ -18,6 +18,10 @@ const locationSchema = new mongoose.Schema({
     type: Boolean,
     required: true,
   },
+  createAt: {
+    type: Date,
+    default: Date.now,
+  },
 });
 
 const Location = mongoose.model("Location", locationSchema);

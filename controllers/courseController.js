@@ -31,6 +31,7 @@ const getCourses = asyncHandler(async (req, res) => {
   const count = await Course.countDocuments({ ...keyword });
 
   const courses = await Course.find({ ...keyword })
+    .sort({ createAt: -1 })
     .limit(pageSize)
     .skip(pageSize * (page - 1));
 
