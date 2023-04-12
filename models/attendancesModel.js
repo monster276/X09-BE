@@ -23,7 +23,7 @@ const attendanceSchema = mongoose.Schema({
   },
 });
 
-const attendancesSchema = new mongoose.Schema({
+const studentAttendanceSchema = mongoose.Schema({
   student: {
     type: mongoose.Schema.Types.ObjectId,
     required: true,
@@ -37,4 +37,4 @@ const attendancesSchema = new mongoose.Schema({
   attendances: [attendanceSchema],
 });
 
-module.exports = mongoose.model("studentAttendance", attendancesSchema);
+module.exports = mongoose.model("StudentAttendance", studentAttendanceSchema);

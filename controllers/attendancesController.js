@@ -1,11 +1,11 @@
-const Attendances = require("../models/attendancesModel");
+const StudentAttendances = require("../models/attendancesModel");
 const asyncHandler = require("express-async-handler");
 const { validationResult } = require("express-validator");
 
-// @desc    Fetch all attendances
+// @desc    Fetch all students attendances
 // @route   GET /api/attendances
 // @access  Private/Teacher
-const getAttendances = asyncHandler(async (req, res) => {
+const getStudentsAttendances = asyncHandler(async (req, res) => {
   const pageSize = 10;
   const page = Number(req.query.pageNumber) || 1;
 
@@ -33,9 +33,9 @@ const getAttendances = asyncHandler(async (req, res) => {
   const excludeFields = ["page", "sort", "limit", "fields"];
   excludeFields.forEach((el) => delete queryObj[el]);
 
-  const count = await Attendances.countDocuments({ ...keyword });
+  const count = await StudentAttendances.countDocuments({ ...keyword });
 
-  const studentsAttendances = await Attendances.find({ ...keyword })
+  const studentsAttendances = await StudentAttendances.find({ ...keyword })
     .sort({ createAt: -1 })
     .find(req.query)
     .limit(pageSize)
@@ -45,11 +45,11 @@ const getAttendances = asyncHandler(async (req, res) => {
   res.json({ studentsAttendances, page, pages: Math.ceil(count / pageSize) });
 });
 
-// @desc    Fetch a single attendance
+// @desc    Fetch a single student attendances
 // @route   GET /api/attendances/:id
 // @access  Private/Teacher
-const getAttendancesById = asyncHandler(async (req, res) => {
-  const studentAttendances = await Attendances.findById(req.params.id)
+const getStudentAttendancesById = asyncHandler(async (req, res) => {
+  const studentAttendances = await StudentAttendances.findById(req.params.id)
     .populate("student", "fullName")
     .populate("classroom", "name");
 
@@ -61,10 +61,10 @@ const getAttendancesById = asyncHandler(async (req, res) => {
   }
 });
 
-// @desc    Create a single attendances
+// @desc    Create a single student attendances
 // @route   POST /api/attendances
 // @access  Private/Teacher
-const createAttendances = asyncHandler(async (req, res) => {
+const createStudentAttendances = asyncHandler(async (req, res) => {
   const errors = validationResult(req);
 
   if (!errors.isEmpty()) {
@@ -74,7 +74,7 @@ const createAttendances = asyncHandler(async (req, res) => {
   const { student, classroom } = req.body;
 
   try {
-    const newStudentAttendances = new Attendances({
+    const newStudentAttendances = new StudentAttendances({
       student,
       classroom,
     });
@@ -88,10 +88,10 @@ const createAttendances = asyncHandler(async (req, res) => {
   }
 });
 
-// @desc    Create new attendance
+// @desc    Create new attendances
 // @route   POST /api/attendances/:id/attendance
 // @access  Private/Teacher
-const createStudentAttendance = asyncHandler(async (req, res) => {
+const createAttendances = asyncHandler(async (req, res) => {
   const errors = validationResult(req);
 
   if (!errors.isEmpty()) {
@@ -100,7 +100,7 @@ const createStudentAttendance = asyncHandler(async (req, res) => {
 
   const { lesson, presence, score, comment } = req.body;
 
-  const studentAttendances = await Attendances.findById(req.params.id);
+  const studentAttendances = await StudentAttendances.findById(req.params.id);
 
   if (studentAttendances) {
     const attendance = {
@@ -121,25 +121,25 @@ const createStudentAttendance = asyncHandler(async (req, res) => {
   }
 });
 
-// @desc    Delete a single attendances
+// @desc    Delete a single student attendances
 // @route   DELETE /api/attendances/:id
 // @access  Private/Teacher
-const deleteAttendances = asyncHandler(async (req, res) => {
-  const studentAttendances = await Attendances.findById(req.params.id);
+const deleteStudentAttendances = asyncHandler(async (req, res) => {
+  const studentAttendances = await StudentAttendances.findById(req.params.id);
 
   if (studentAttendances) {
-    await Attendances.findByIdAndRemove(req.params.id);
-    res.json({ message: "Attendances removed" });
+    await StudentAttendances.findByIdAndRemove(req.params.id);
+    res.json({ message: "Student Attendances removed" });
   } else {
     res.status(404);
-    throw new Error("Attendances is not found");
+    throw new Error("Student Attendances is not found");
   }
 });
 
-// @desc    Update a single attendances
+// @desc    Update a single student attendances
 // @route   PUT /api/attendances/:id
 // @access  Private/Teacher
-const updateAttendances = asyncHandler(async (req, res) => {
+const updateStudentAttendances = asyncHandler(async (req, res) => {
   const errors = validationResult(req);
 
   if (!errors.isEmpty()) {
@@ -148,7 +148,7 @@ const updateAttendances = asyncHandler(async (req, res) => {
 
   const { student, classroom } = req.body;
 
-  const studentAttendances = await Attendances.findById(req.params.id);
+  const studentAttendances = await StudentAttendances.findById(req.params.id);
 
   if (studentAttendances) {
     studentAttendances.student = student;
@@ -158,15 +158,15 @@ const updateAttendances = asyncHandler(async (req, res) => {
     res.json(updateStudentAttendances);
   } else {
     res.status(404);
-    throw new Error("Attendances not found");
+    throw new Error("Student Attendances not found");
   }
 });
 
 module.exports = {
-  getAttendances,
-  getAttendancesById,
+  getStudentsAttendances,
+  getStudentAttendancesById,
+  createStudentAttendances,
   createAttendances,
-  createStudentAttendance,
-  deleteAttendances,
-  updateAttendances,
+  deleteStudentAttendances,
+  updateStudentAttendances,
 };

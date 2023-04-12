@@ -6,19 +6,19 @@ const {
 } = require("../validators/attendancesValidators");
 
 const {
-  getAttendances,
-  getAttendancesById,
+  getStudentsAttendances,
+  getStudentAttendancesById,
+  createStudentAttendances,
   createAttendances,
-  createStudentAttendance,
-  deleteAttendances,
-  updateAttendances,
+  deleteStudentAttendances,
+  updateStudentAttendances,
 } = require("../controllers/attendancesController");
 
-router.get("/", getAttendances);
-router.get("/:id", getAttendancesById);
-router.post("/", studentAttendance, createAttendances);
-router.post("/:id/attendance", attendances, createStudentAttendance);
-router.delete("/:id", deleteAttendances);
-router.put("/:id", studentAttendance, updateAttendances);
+router.get("/", getStudentsAttendances);
+router.get("/:id", getStudentAttendancesById);
+router.post("/", studentAttendance, createStudentAttendances);
+router.post("/:id/attendance", attendances, createAttendances);
+router.delete("/:id", deleteStudentAttendances);
+router.put("/:id", studentAttendance, updateStudentAttendances);
 
 module.exports = router;
