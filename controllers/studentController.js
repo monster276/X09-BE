@@ -20,6 +20,7 @@ const getStudents = asyncHandler(async (req, res) => {
 
   const count = await Student.countDocuments({ ...keyword });
   const students = await Student.find({ ...keyword })
+    .sort({ createAt: -1 })
     .limit(pageSize)
     .skip(pageSize * (page - 1));
 
@@ -111,7 +112,6 @@ const updateStudent = asyncHandler(async (req, res) => {
     throw new Error("Student not found");
   }
 });
-
 
 module.exports = {
   getStudents,

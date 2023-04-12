@@ -32,6 +32,7 @@ const getClassrooms = asyncHandler(async (req, res) => {
   const count = await Classroom.countDocuments({ ...keyword });
 
   const classrooms = await Classroom.find({ ...keyword })
+    .sort({ createAt: -1 })
     .limit(pageSize)
     .skip(pageSize * (page - 1))
     .populate("user", "fullName")

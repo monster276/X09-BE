@@ -35,6 +35,10 @@ const courseSchema = mongoose.Schema({
     type: Number,
     required: true,
   },
+  createAt: {
+    type: Date,
+    default: Date.now,
+  },
 });
 
 const Course = mongoose.model("Course", courseSchema);

@@ -1,5 +1,5 @@
 const enrollCourse = require('../models/enrollCourse')
-const Locations = require('../models/LocationModel')
+const Locations = require('../models/locationModel')
 const { validationResult } = require('express-validator')
 const { query } = require('express')
 const enrollCourseController = {

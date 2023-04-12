@@ -1,4 +1,4 @@
-const Location = require("../models/LocationModel");
+const Location = require("../models/locationModel");
 const asyncHandler = require("express-async-handler");
 const { validationResult } = require("express-validator");
 
@@ -31,6 +31,7 @@ const getLocations = asyncHandler(async (req, res) => {
   const count = await Location.countDocuments({ ...keyword });
 
   const locations = await Location.find({ ...keyword })
+    .sort({ createAt: -1 })
     .limit(pageSize)
     .skip(pageSize * (page - 1));
 

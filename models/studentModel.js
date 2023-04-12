@@ -15,6 +15,10 @@ const studentSchema = mongoose.Schema({
     required: true,
     unique: true,
   },
+  createAt: {
+    type: Date,
+    default: Date.now,
+  },
 });
 
 const Student = mongoose.model("Student", studentSchema);
