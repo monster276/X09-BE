@@ -9,37 +9,30 @@ const getStudentsAttendances = asyncHandler(async (req, res) => {
   const pageSize = 10;
   const page = Number(req.query.pageNumber) || 1;
 
-  const keyword = req.query.keyword
-    ? {
-        $or: [
-          {
-            student: {
-              $regex: req.query.keyword,
-              $options: "i",
-            },
-          },
-          {
-            classroom: {
-              $regex: req.query.keyword,
-              $options: "i",
-            },
-          },
-        ],
-      }
-    : {};
+  // const keyword = req.query.keyword
+  //   ? {
+  //       $or: [
+  //         {
+  //           student: {
+  //             $regex: req.query.keyword,
+  //             $options: "i",
+  //           },
+  //         },
+  //         {
+  //           classroom: {
+  //             $regex: req.query.keyword,
+  //             $options: "i",
+  //           },
+  //         },
+  //       ],
+  //     }
+  //   : {};
 
-  const queryObj = { ...req.query };
+  const count = await StudentAttendances.countDocuments({});
 
-  const excludeFields = ["page", "sort", "limit", "fields"];
-  excludeFields.forEach((el) => delete queryObj[el]);
-
-  const count = await StudentAttendances.countDocuments({ ...keyword });
-
-  const studentsAttendances = await StudentAttendances.find({ ...keyword })
+  const studentsAttendances = await StudentAttendances.find(req.query)
     .sort({ createAt: -1 })
-    .find(req.query)
     .limit(pageSize)
-    .skip(pageSize * (page - 1))
     .populate("student", "fullName")
     .populate("classroom", "name");
   res.json({ studentsAttendances, page, pages: Math.ceil(count / pageSize) });
