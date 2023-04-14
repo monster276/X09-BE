@@ -37,7 +37,8 @@ const getClassrooms = asyncHandler(async (req, res) => {
     .skip(pageSize * (page - 1))
     .populate("user", "fullName")
     .populate("location", "name")
-    .populate("course", "name");
+    .populate("course", "name")
+    .populate({ path: "students", populate: { path: "fullName" } });
 
   res.json({ classrooms, page, pages: Math.ceil(count / pageSize) });
 });
@@ -80,6 +81,7 @@ const createClassroom = asyncHandler(async (req, res) => {
     numberOfLessons,
     classTime,
     schedule,
+    students,
   } = req.body;
 
   try {
@@ -94,6 +96,7 @@ const createClassroom = asyncHandler(async (req, res) => {
       numberOfLessons,
       classTime,
       schedule,
+      students,
     });
 
     const classroom = await newClassroom.save();
@@ -132,8 +135,16 @@ const updateClassroom = asyncHandler(async (req, res) => {
     return res.status(400).json({ errors: errors.array() });
   }
 
-  const { id, name, course, startTime, endTime, numberOfLessons, classTime } =
-    req.body;
+  const {
+    id,
+    name,
+    course,
+    startTime,
+    endTime,
+    numberOfLessons,
+    classTime,
+    students,
+  } = req.body;
 
   const classroom = await Classroom.findById(req.params.id);
 
@@ -145,6 +156,7 @@ const updateClassroom = asyncHandler(async (req, res) => {
     classroom.endTime = endTime;
     classroom.numberOfLessons = numberOfLessons;
     classroom.classTime = classTime;
+    classroom.students = students;
 
     const updateClassroom = await classroom.save();
     res.json(updateClassroom);

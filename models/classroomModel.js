@@ -49,6 +49,12 @@ const classroomSchema = mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+  students: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "enrollCourse",
+    },
+  ],
 });
 
 const Classroom = mongoose.model("Classroom", classroomSchema);
