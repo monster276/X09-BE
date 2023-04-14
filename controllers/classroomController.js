@@ -2,6 +2,7 @@ const Classroom = require("../models/classroomModel");
 const asyncHandler = require("express-async-handler");
 const { validationResult } = require("express-validator");
 // const sendEmail = require("../utils/sendEmail");
+const mongoose = require("mongoose");
 
 // @desc    Fetch all classrooms
 // @route   GET /api/classrooms
@@ -50,7 +51,8 @@ const getClassroomById = asyncHandler(async (req, res) => {
   const classroom = await Classroom.findById(req.params.id)
     .populate("user", "fullName")
     .populate("location", "name")
-    .populate("course", "name");
+    .populate("course", "name")
+    .populate({ path: "students", populate: { path: "fullName" } });
 
   if (classroom) {
     res.json(classroom);
@@ -146,7 +148,11 @@ const updateClassroom = asyncHandler(async (req, res) => {
     students,
   } = req.body;
 
-  const classroom = await Classroom.findById(req.params.id);
+  const classroom = await Classroom.findById(req.params.id)
+    .populate("user", "fullName")
+    .populate("location", "name")
+    .populate("course", "name")
+    .populate({ path: "students", populate: { path: "fullName" } });
 
   if (classroom) {
     classroom.id = id;
