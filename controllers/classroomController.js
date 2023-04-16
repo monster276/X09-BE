@@ -1,8 +1,10 @@
 const Classroom = require("../models/classroomModel");
+const enrollCourse = require("../models/enrollCourse");
+const Student = require("../models/studentModel");
 const asyncHandler = require("express-async-handler");
 const { validationResult } = require("express-validator");
+// const mongoose = require("mongoose");
 // const sendEmail = require("../utils/sendEmail");
-const mongoose = require("mongoose");
 
 // @desc    Fetch all classrooms
 // @route   GET /api/classrooms
@@ -103,7 +105,14 @@ const createClassroom = asyncHandler(async (req, res) => {
 
     const classroom = await newClassroom.save();
 
-    // sendEmail();
+    // Change enroll course status 1 -> 2
+    classroom.students.map(async (enrollId) => {
+      const studentEnroll = await enrollCourse.findById(enrollId);
+
+      studentEnroll.status = 2;
+
+      await studentEnroll.save();
+    });
 
     res.json(classroom);
   } catch (err) {
@@ -152,7 +161,10 @@ const updateClassroom = asyncHandler(async (req, res) => {
     .populate("user", "fullName")
     .populate("location", "name")
     .populate("course", "name")
-    .populate({ path: "students", populate: { path: "fullName" } });
+    .populate({
+      path: "students",
+      populate: { path: "fullName" },
+    });
 
   if (classroom) {
     classroom.id = id;
@@ -164,7 +176,22 @@ const updateClassroom = asyncHandler(async (req, res) => {
     classroom.classTime = classTime;
     classroom.students = students;
 
+    // Change enroll course status 1 -> 2
+    classroom.students.map(async (enrollId) => {
+      const studentEnroll = await enrollCourse.findById(enrollId);
+
+      studentEnroll.status = 2;
+
+      await studentEnroll.save();
+    });
+
+    // const studentEnroll = await enrollCourse.findById(classroom.students);
+    // console.log(classroom.students[1]);
+    // studentEnroll.status = 2;
+    // await studentEnroll.save();
+
     const updateClassroom = await classroom.save();
+
     res.json(updateClassroom);
   } else {
     res.status(404);
