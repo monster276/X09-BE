@@ -8,12 +8,10 @@ const studentSchema = mongoose.Schema({
   email: {
     type: String,
     required: true,
-    unique: true,
   },
   phoneNumber: {
     type: Number,
     required: true,
-    unique: true,
   },
   createAt: {
     type: Date,

@@ -17,10 +17,6 @@ const attendanceSchema = mongoose.Schema({
     type: String,
     required: false,
   },
-  createAt: {
-    type: Date,
-    default: Date.now,
-  },
 });
 
 const studentAttendanceSchema = mongoose.Schema({
@@ -35,6 +31,10 @@ const studentAttendanceSchema = mongoose.Schema({
     ref: "Classroom",
   },
   attendances: [attendanceSchema],
+  createAt: {
+    type: Date,
+    default: Date.now,
+  },
 });
 
 module.exports = mongoose.model("StudentAttendance", studentAttendanceSchema);
