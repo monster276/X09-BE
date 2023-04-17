@@ -26,13 +26,19 @@ const userController = {
               },
             },
             {
-              fullname: {
+              fullName: {
                 $regex: req.query.keyword,
                 $options: 'i',
               },
             },
             {
               username: {
+                $regex: req.query.keyword,
+                $options: 'i',
+              },
+            },
+            {
+              email: {
                 $regex: req.query.keyword,
                 $options: 'i',
               },

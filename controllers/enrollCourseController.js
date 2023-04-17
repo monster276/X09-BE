@@ -53,7 +53,15 @@ const enrollCourseController = {
     const page = Number(req.query.pageNumber) || 1
     const keyword = req.query.keyword
       ? {
-          name: {
+          fullName: {
+            $regex: req.query.keyword,
+            $options: 'i',
+          },
+          email: {
+            $regex: req.query.keyword,
+            $options: 'i',
+          },
+          phoneNumber: {
             $regex: req.query.keyword,
             $options: 'i',
           },
@@ -64,7 +72,7 @@ const enrollCourseController = {
     const excludeFields = ['page', 'sort', 'limit', 'fields']
     excludeFields.forEach((el) => delete queryObj[el])
     const count = await enrollCourse.countDocuments({})
-    const enrollCourses = await enrollCourse
+    const enrollCourses = await enrollCourse.find({...keyword })
       .find(req.query)
       .find({ status: '1' })
       .limit(pageSize)
