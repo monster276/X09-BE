@@ -26,10 +26,9 @@ const enrollCourseSchema = new mongoose.Schema(
     },
     status: {
       type: Number,
+      default: '1',
       required: true,
-
-    }
-
+    },
   },
   { timestamps: true },
 )
