@@ -40,23 +40,26 @@ const sendEmail = async (req, res) => {
   const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
-      user: 'ls2023.ln@gmail.com',
-      pass: 'vuquanghieu276195', // naturally, replace both with your real credentials or an application-specific password
+      user: 'nodemailtest0451@gmail.com',
+      pass: 'obecdbodoifhctvo', // naturally, replace both with your real credentials or an application-specific password
     },
   })
 
   const mailOptions = {
-    from: 'ls2023.ln@gmail.com',
+    from: 'nodemailtest0451@gmail.com',
     to: `${email}`,
     subject: 'Invoices due',
-    text: 'Dudes, we really need your money.',
+    text:
+      'Cảm ơn bạn đã lựa chọn chúng tôi, yêu cầu đăng ký khoá học của bạn đã được xác nhận. Chúng tôi sẽ liên hệ với bạn sau khi lớp học được tạo',
   }
 
   transporter.sendMail(mailOptions, function (error, info) {
     if (error) {
       console.log(error)
+      res.status(500).json(err)
     } else {
       console.log('Email sent: ' + info.response)
+      res.json({ status: 'Email sent', mailOptions })
     }
   })
 }
