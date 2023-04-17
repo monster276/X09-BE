@@ -26,7 +26,13 @@ const userController = {
               },
             },
             {
-              name: {
+              fullname: {
+                $regex: req.query.keyword,
+                $options: 'i',
+              },
+            },
+            {
+              username: {
                 $regex: req.query.keyword,
                 $options: 'i',
               },
