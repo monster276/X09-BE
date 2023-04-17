@@ -1,6 +1,7 @@
 const Classroom = require("../models/classroomModel");
 const enrollCourse = require("../models/enrollCourse");
 const Student = require("../models/studentModel");
+const StudentAttendances = require("../models/attendancesModel");
 const asyncHandler = require("express-async-handler");
 const { validationResult } = require("express-validator");
 // const mongoose = require("mongoose");
@@ -112,6 +113,23 @@ const createClassroom = asyncHandler(async (req, res) => {
       studentEnroll.status = 2;
 
       await studentEnroll.save();
+
+      // Create new students
+      const newStudent = await new Student({
+        fullName: studentEnroll.fullName,
+        email: studentEnroll.email,
+        phoneNumber: studentEnroll.phoneNumber,
+      });
+
+      const student = await newStudent.save();
+
+      // Create Student attendances
+      const newStudentAttendances = await new StudentAttendances({
+        student: student._id,
+        classroom: classroom._id,
+      });
+
+      await newStudentAttendances.save();
     });
 
     res.json(classroom);
@@ -176,13 +194,30 @@ const updateClassroom = asyncHandler(async (req, res) => {
     classroom.classTime = classTime;
     classroom.students = students;
 
-    // Change enroll course status 1 -> 2
     classroom.students.map(async (enrollId) => {
       const studentEnroll = await enrollCourse.findById(enrollId);
 
+      // Change enroll course status 1 -> 2
       studentEnroll.status = 2;
 
       await studentEnroll.save();
+
+      // Create new students
+      const newStudent = await new Student({
+        fullName: studentEnroll.fullName,
+        email: studentEnroll.email,
+        phoneNumber: studentEnroll.phoneNumber,
+      });
+
+      const student = await newStudent.save();
+
+      // Create Student attendances
+      const newStudentAttendances = await new StudentAttendances({
+        student: student._id,
+        classroom: classroom._id,
+      });
+
+      await newStudentAttendances.save();
     });
 
     // const studentEnroll = await enrollCourse.findById(classroom.students);
