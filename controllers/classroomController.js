@@ -5,7 +5,7 @@ const StudentAttendances = require("../models/attendancesModel");
 const asyncHandler = require("express-async-handler");
 const { validationResult } = require("express-validator");
 // const mongoose = require("mongoose");
-// const sendEmail = require("../utils/sendEmail");
+const sendEmailForClassroom = require("../utils/sendEmailForClassroom");
 
 // @desc    Fetch all classrooms
 // @route   GET /api/classrooms
@@ -106,14 +106,15 @@ const createClassroom = asyncHandler(async (req, res) => {
 
     const classroom = await newClassroom.save();
 
-    // Change enroll course status 1 -> 2
     classroom.students.map(async (enrollId) => {
       const studentEnroll = await enrollCourse.findById(enrollId);
 
+      // Change enroll course status 1 -> 2
       studentEnroll.status = 2;
 
       await studentEnroll.save();
 
+      const checkStudentAvailable = await Student.find().select("email");
       // Create new students
       const newStudent = await new Student({
         fullName: studentEnroll.fullName,
@@ -130,6 +131,9 @@ const createClassroom = asyncHandler(async (req, res) => {
       });
 
       await newStudentAttendances.save();
+
+      // Send Email to Student
+      sendEmailForClassroom(student.email, classroom.name);
     });
 
     res.json(classroom);
