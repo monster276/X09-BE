@@ -133,7 +133,10 @@ const createClassroom = asyncHandler(async (req, res) => {
       await newStudentAttendances.save();
 
       // Send Email to Student
-      sendEmailForClassroom(student.email, classroom.name);
+      sendEmailForClassroom(
+        student.email,
+        classroom
+      );
     });
 
     res.json(classroom);
