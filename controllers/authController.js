@@ -72,14 +72,14 @@ const authController = {
       console.log(req.body.password)
 
       if (!user) {
-        res.status(404).json('Incorrect username')
+        res.status(404).json('Tên tài khoản không đúng')
       }
       const validPassword = await bcrypt.compare(
         req.body.password,
         user.password,
       )
       if (!validPassword) {
-        res.status(404).json('Incorrect password')
+        res.status(404).json('Mật khẩu không đúng')
       }
       if (user && validPassword) {
         //Generate access token
