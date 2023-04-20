@@ -1,7 +1,10 @@
 const enrollCourse = require('../models/enrollCourse')
 const Locations = require('../models/locationModel')
+const Course = require('../models/courseModel')
 const { validationResult } = require('express-validator')
 const { query } = require('express')
+const sendEmail = require('../utils/sendEmail')
+const Location = require('../models/locationModel')
 const enrollCourseController = {
   //CREATE ENROLL
   createEnroll: async (req, res) => {
@@ -21,6 +24,14 @@ const enrollCourseController = {
       })
       //Save to DB
       const enrollCourseNew = await newenrollCoures.save()
+      const CoureName = await Course.findById(enrollCourseNew.course)
+      const LocationName = await Location.findById(enrollCourseNew.location)
+      sendEmail(
+        enrollCourseNew.email,
+        CoureName.name,
+        LocationName.name,
+        enrollCourseNew.fullName
+      )
       res.status(200).json(enrollCourseNew)
     } catch (err) {
       res.status(500).json(err)
@@ -72,7 +83,8 @@ const enrollCourseController = {
     const excludeFields = ['page', 'sort', 'limit', 'fields']
     excludeFields.forEach((el) => delete queryObj[el])
     const count = await enrollCourse.countDocuments({})
-    const enrollCourses = await enrollCourse.find({...keyword })
+    const enrollCourses = await enrollCourse
+      .find({ ...keyword })
       .find(req.query)
       .find({ status: '1' })
       .limit(pageSize)
