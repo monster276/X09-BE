@@ -247,7 +247,7 @@ const updateClassroom = asyncHandler(async (req, res) => {
 
         await newStudentAttendances.save();
 
-        // sendEmailForClassroom(saveStudent.email, classroom);
+        sendEmailForClassroom(saveStudent.email, classroom);
       } else {
         console.log("Tao student moi");
         // Create new students
@@ -268,7 +268,7 @@ const updateClassroom = asyncHandler(async (req, res) => {
         await newStudentAttendances.save();
 
         // Send Email to Student
-        // sendEmailForClassroom(student.email, classroom);
+        sendEmailForClassroom(student.email, classroom);
       }
     });
 
