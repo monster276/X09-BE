@@ -115,28 +115,47 @@ const createClassroom = asyncHandler(async (req, res) => {
       await studentEnroll.save();
 
       const checkStudentAvailable = await Student.find().select("email");
-      // Create new students
-      const newStudent = await new Student({
-        fullName: studentEnroll.fullName,
-        email: studentEnroll.email,
-        phoneNumber: studentEnroll.phoneNumber,
+
+      let saveStudent;
+
+      const check = checkStudentAvailable.some((studentAvailable) => {
+        console.log(studentAvailable.email);
+        saveStudent = studentAvailable;
+        return studentAvailable.email === studentEnroll.email;
       });
 
-      const student = await newStudent.save();
+      if (check) {
+        console.log("Student ton tai");
+        const newStudentAttendances = await new StudentAttendances({
+          student: saveStudent._id,
+          classroom: classroom._id,
+        });
 
-      // Create Student attendances
-      const newStudentAttendances = await new StudentAttendances({
-        student: student._id,
-        classroom: classroom._id,
-      });
+        await newStudentAttendances.save();
 
-      await newStudentAttendances.save();
+        sendEmailForClassroom(saveStudent.email, classroom);
+      } else {
+        console.log("Tao student moi");
+        // Create new students
+        const newStudent = await new Student({
+          fullName: studentEnroll.fullName,
+          email: studentEnroll.email,
+          phoneNumber: studentEnroll.phoneNumber,
+        });
 
-      // Send Email to Student
-      sendEmailForClassroom(
-        student.email,
-        classroom
-      );
+        const student = await newStudent.save();
+
+        // Create Student attendances
+        const newStudentAttendances = await new StudentAttendances({
+          student: student._id,
+          classroom: classroom._id,
+        });
+
+        await newStudentAttendances.save();
+
+        // Send Email to Student
+        sendEmailForClassroom(student.email, classroom);
+      }
     });
 
     res.json(classroom);
@@ -226,11 +245,6 @@ const updateClassroom = asyncHandler(async (req, res) => {
 
       await newStudentAttendances.save();
     });
-
-    // const studentEnroll = await enrollCourse.findById(classroom.students);
-    // console.log(classroom.students[1]);
-    // studentEnroll.status = 2;
-    // await studentEnroll.save();
 
     const updateClassroom = await classroom.save();
 
