@@ -1,9 +1,15 @@
 const express = require("express");
 const router = express.Router();
 const classroomValidators = require("../validators/classroomValidators");
+const {
+  verifyToken,
+  verifyTokenAndAdmin,
+  verifyTokenAndUserAuthorization,
+} = require("../controllers/verifyToken");
 
 const {
   getClassrooms,
+  getMyClassrooms,
   getClassroomById,
   createClassroom,
   deleteClassroom,
@@ -11,6 +17,7 @@ const {
 } = require("../controllers/classroomController");
 
 router.get("/", getClassrooms);
+router.get("/myclassrooms", getMyClassrooms);
 router.get("/:id", getClassroomById);
 router.post("/", classroomValidators, createClassroom);
 router.delete("/:id", deleteClassroom);

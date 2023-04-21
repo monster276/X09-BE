@@ -9,7 +9,7 @@ const sendEmailForClassroom = require("../utils/sendEmailForClassroom");
 
 // @desc    Fetch all classrooms
 // @route   GET /api/classrooms
-// @access  Private/Teacher
+// @access  Private/Admin
 const getClassrooms = asyncHandler(async (req, res) => {
   const pageSize = 10;
   const page = Number(req.query.pageNumber) || 1;
@@ -45,6 +45,15 @@ const getClassrooms = asyncHandler(async (req, res) => {
     .populate({ path: "students", populate: { path: "fullName" } });
 
   res.json({ classrooms, page, pages: Math.ceil(count / pageSize) });
+});
+
+// @desc    Get logged in user classrooms
+// @route   GET /api/classrooms/myclassrooms
+// @access  Private/Teacher
+const getMyClassrooms = asyncHandler(async (req, res) => {
+  const classrooms = await Classroom.find({ user: req.user._id });
+
+  res.json(classrooms);
 });
 
 // @desc    Fetch a single classroom
@@ -193,7 +202,9 @@ const updateClassroom = asyncHandler(async (req, res) => {
   const {
     id,
     name,
+    user,
     course,
+    location,
     startTime,
     endTime,
     numberOfLessons,
@@ -212,7 +223,9 @@ const updateClassroom = asyncHandler(async (req, res) => {
 
   if (classroom) {
     classroom.id = id;
+    classroom.user = user;
     classroom.course = course;
+    classroom.location = location;
     classroom.name = name;
     classroom.startTime = startTime;
     classroom.endTime = endTime;
@@ -283,6 +296,7 @@ const updateClassroom = asyncHandler(async (req, res) => {
 
 module.exports = {
   getClassrooms,
+  getMyClassrooms,
   getClassroomById,
   createClassroom,
   deleteClassroom,
