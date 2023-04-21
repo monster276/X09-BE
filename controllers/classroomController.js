@@ -51,7 +51,7 @@ const getClassrooms = asyncHandler(async (req, res) => {
 // @route   GET /api/classrooms/myclassrooms
 // @access  Private/Teacher
 const getMyClassrooms = asyncHandler(async (req, res) => {
-  const classrooms = await Classroom.find({ user: req.user._id });
+  const classrooms = await Classroom.find({});
 
   res.json(classrooms);
 });
@@ -128,13 +128,11 @@ const createClassroom = asyncHandler(async (req, res) => {
       let saveStudent;
 
       const check = checkStudentAvailable.some((studentAvailable) => {
-        console.log(studentAvailable.email);
         saveStudent = studentAvailable;
         return studentAvailable.email === studentEnroll.email;
       });
 
       if (check) {
-        console.log("Student ton tai");
         const newStudentAttendances = await new StudentAttendances({
           student: saveStudent._id,
           classroom: classroom._id,
