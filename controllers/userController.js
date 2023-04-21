@@ -1,4 +1,5 @@
 const User = require('../models/User')
+const bcrypt = require('bcryptjs')
 
 const userController = {
   //GET USER
@@ -63,28 +64,30 @@ const userController = {
     }
   },
   //UPDATE USER
+
   updateUser: async (req, res) => {
-    if (req.body.userId === req.params.id) {
-      if (req.body.password) {
-        const salt = await bcrypt.genSalt(10)
-        req.body.password = await bcrypt.hash(req.body.password, salt)
-      }
-      try {
-        const upadateUser = await User.findByIdAndUpdate(
-          req.params.id,
-          {
-            $set: req.body,
-          },
-          { new: true },
-        )
-        res.status(200).json(upadateUser)
-      } catch (err) {
-        res.status(400).json(err)
-      }
-    } else {
-      res.status(401).json('Wrong user info')
+    if (req.body.password) {
+      const salt = await bcrypt.genSalt(10)
+      req.body.password = await bcrypt.hash(req.body.password, salt)
+    }
+
+    try {
+      const user = await User.findByIdAndUpdate(
+        req.params.id,
+        {
+          $set: req.body,
+        },
+        { new: true },
+      )
+      res.json({
+        status: 'SUCCESS',
+        message: 'User is Updated successfully...',
+        data: user,
+      })
+    } catch (err) {
+      res.status(400).json(err)
     }
   },
 }
-//https://www.youtube.com/watch?v=dWMeUg1kobM
+
 module.exports = userController
