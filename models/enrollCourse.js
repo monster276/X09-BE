@@ -1,4 +1,6 @@
 const mongoose = require('mongoose')
+const mongoosePaginate = require('mongoose-paginate-v2');
+
 const enrollCourseSchema = new mongoose.Schema(
   {
     fullName: {
@@ -32,5 +34,6 @@ const enrollCourseSchema = new mongoose.Schema(
   },
   { timestamps: true },
 )
+enrollCourseSchema.plugin(mongoosePaginate);
 const enrollCourse = mongoose.model('enrollCourse', enrollCourseSchema)
 module.exports = enrollCourse

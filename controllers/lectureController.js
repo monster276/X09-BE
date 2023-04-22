@@ -7,7 +7,7 @@ const { validationResult } = require('express-validator')
 // @access  Private/Teacher
 const getLectures = asyncHandler(async (req, res) => {
   const pageSize = 10
-  const page = Number(req.query.pageNumber) || 1
+  let page = Number(req.query.pageNumber) || 1
 
   const keyword = req.query.keyword
     ? {
@@ -20,12 +20,14 @@ const getLectures = asyncHandler(async (req, res) => {
   const queryObj = { ...req.query }
   const excludeFields = ['page', 'sort', 'limit', 'fields']
   excludeFields.forEach((el) => delete queryObj[el])
+  let queryStr = JSON.stringify(queryObj)
+  queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, (match) => `$${match}`)
   const count = await Lecture.countDocuments({ ...keyword })
   const lectures = await Lecture.find({ ...keyword })
-    .find(req.query)
-    .limit(pageSize)
-    .skip(pageSize * (page - 1))
+    .find(JSON.parse(queryStr))
     .populate('course', 'name')
+    .skip(pageSize * (page - 1))
+    .limit(pageSize)
 
   res.json({ lectures, page, pages: Math.ceil(count / pageSize) })
 })
