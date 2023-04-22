@@ -5,6 +5,7 @@ const { validationResult } = require('express-validator')
 const { query } = require('express')
 const sendEmail = require('../utils/sendEmail')
 const Location = require('../models/locationModel')
+const { paginate } = require('mongoose-paginations')
 const enrollCourseController = {
   //CREATE ENROLL
   createEnroll: async (req, res) => {
@@ -30,7 +31,7 @@ const enrollCourseController = {
         enrollCourseNew.email,
         CoureName.name,
         LocationName.name,
-        enrollCourseNew.fullName
+        enrollCourseNew.fullName,
       )
       res.status(200).json(enrollCourseNew)
     } catch (err) {
@@ -60,8 +61,6 @@ const enrollCourseController = {
     }
   },
   getListEnroll: async (req, res) => {
-    const pageSize = 10
-    const page = Number(req.query.pageNumber) || 1
     const keyword = req.query.keyword
       ? {
           fullName: {
@@ -72,7 +71,11 @@ const enrollCourseController = {
             $regex: req.query.keyword,
             $options: 'i',
           },
-          phoneNumber: {
+          location: {
+            $regex: req.query.keyword,
+            $options: 'i',
+          },
+          course: {
             $regex: req.query.keyword,
             $options: 'i',
           },
@@ -82,21 +85,30 @@ const enrollCourseController = {
     const queryObj = { ...req.query }
     const excludeFields = ['page', 'sort', 'limit', 'fields']
     excludeFields.forEach((el) => delete queryObj[el])
-    const count = await enrollCourse.countDocuments({})
-    const enrollCourses = await enrollCourse
-      .find({ ...keyword })
-      .find(req.query)
+    let queryStr = JSON.stringify(queryObj)
+    queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, (match) => `$${match}`)
+    let page = Number(req.query.page) || 1
+    console.log(req.query.page)
+    let limit = Number(req.query.limit) || 10
+    let skip = (page - 1) * limit
+    let count = await enrollCourse.countDocuments({})
+    if (skip >= count) throw new Error('Trang không tồn tại')
+    const query = enrollCourse
+      .find(JSON.parse(queryStr))
       .find({ status: '1' })
-      .limit(pageSize)
-      .skip(pageSize * (page - 1))
+      .sort({ createdAt: -1 })
       .populate('location', 'name ')
       .populate('course', 'name ')
+      .skip(skip)
+      .limit(limit)
+
+    const enrollCourses = await query
     res.json({
       status: 'done',
       results: enrollCourses.length,
       enrollCourses,
       page,
-      pages: Math.ceil(count / pageSize),
+      pages: Math.ceil(count / limit),
     })
   },
 }

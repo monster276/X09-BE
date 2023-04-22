@@ -49,6 +49,7 @@ const userController = {
       : {}
     const count = await User.countDocuments({ ...keyword })
     const users = await User.find({ ...keyword })
+      .sort({ createAt: -1 })
       .limit(pageSize)
       .skip(pageSize * (page - 1))
     res.json({ users, page, pages: Math.ceil(count / pageSize) })
