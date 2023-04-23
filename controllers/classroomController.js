@@ -1,18 +1,18 @@
-const Classroom = require("../models/classroomModel");
-const enrollCourse = require("../models/enrollCourse");
-const Student = require("../models/studentModel");
-const StudentAttendances = require("../models/attendancesModel");
-const asyncHandler = require("express-async-handler");
-const { validationResult } = require("express-validator");
+const Classroom = require('../models/classroomModel')
+const enrollCourse = require('../models/enrollCourse')
+const Student = require('../models/studentModel')
+const StudentAttendances = require('../models/attendancesModel')
+const asyncHandler = require('express-async-handler')
+const { validationResult } = require('express-validator')
 // const mongoose = require("mongoose");
-const sendEmailForClassroom = require("../utils/sendEmailForClassroom");
+const sendEmailForClassroom = require('../utils/sendEmailForClassroom')
 
 // @desc    Fetch all classrooms
 // @route   GET /api/classrooms
 // @access  Private/Admin
 const getClassrooms = asyncHandler(async (req, res) => {
-  const pageSize = 10;
-  const page = Number(req.query.pageNumber) || 1;
+  const pageSize = 10
+  let page = Number(req.query.pageNumber) || 1
 
   const keyword = req.query.keyword
     ? {
@@ -20,68 +20,73 @@ const getClassrooms = asyncHandler(async (req, res) => {
           {
             id: {
               $regex: req.query.keyword,
-              $options: "x",
+              $options: 'x',
             },
           },
           {
             name: {
               $regex: req.query.keyword,
-              $options: "x",
+              $options: 'x',
             },
           },
         ],
       }
-    : {};
+    : {}
 
-  const count = await Classroom.countDocuments({ ...keyword });
-
+  const count = await Classroom.countDocuments({ ...keyword })
+  const queryObj = { ...req.query }
+  const excludeFields = ['page', 'sort', 'limit', 'fields']
+  excludeFields.forEach((el) => delete queryObj[el])
+  let queryStr = JSON.stringify(queryObj)
+  queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, (match) => `$${match}`)
   const classrooms = await Classroom.find({ ...keyword })
+    .find(JSON.parse(queryStr))
     .sort({ createAt: -1 })
-    .limit(pageSize)
+    .populate('user', 'fullName')
+    .populate('location', 'name')
+    .populate('course', 'name')
+    .populate({ path: 'students', populate: { path: 'fullName' } })
     .skip(pageSize * (page - 1))
-    .populate("user", "fullName")
-    .populate("location", "name")
-    .populate("course", "name")
-    .populate({ path: "students", populate: { path: "fullName" } });
+    .limit(pageSize)
 
-  res.json({ classrooms, page, pages: Math.ceil(count / pageSize) });
-});
+  res.json({ classrooms, page, pages: Math.ceil(count / pageSize) })
+})
 
 // @desc    Get logged in user classrooms
 // @route   GET /api/classrooms/myclassrooms
 // @access  Private/Teacher
 const getMyClassrooms = asyncHandler(async (req, res) => {
-  const classrooms = await Classroom.find({});
+  const classrooms = await Classroom.find({})
 
-  res.json(classrooms);
-});
+  res.json(classrooms)
+})
 
 // @desc    Fetch a single classroom
 // @route   GET /api/classrooms/:id
 // @access  Private/Teacher
 const getClassroomById = asyncHandler(async (req, res) => {
   const classroom = await Classroom.findById(req.params.id)
-    .populate("user", "fullName")
-    .populate("location", "name")
-    .populate("course", "name")
-    .populate({ path: "students", populate: { path: "fullName" } });
+    .populate('user', 'fullName')
+    .populate('location', 'name')
+    .populate('course', 'name')
+    .populate({ path: 'students', populate: { path: 'fullName' } })
 
   if (classroom) {
-    res.json(classroom);
+    res.json(classroom)
   } else {
-    res.status(404);
-    throw new Error("Classroom not found");
+    res.status(404)
+    throw new Error('Classroom not found')
   }
-});
+})
 
 // @desc    Create a single classroom
 // @route   POST /api/classrooms
 // @access  Private/Teacher
 const createClassroom = asyncHandler(async (req, res) => {
-  const errors = validationResult(req);
+  const errors = validationResult(req)
 
   if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
+    return res.status(400).json({ errors: errors.array() })
   }
 
   const {
@@ -96,7 +101,7 @@ const createClassroom = asyncHandler(async (req, res) => {
     classTime,
     schedule,
     students,
-  } = req.body;
+  } = req.body
 
   try {
     const newClassroom = new Classroom({
@@ -111,89 +116,90 @@ const createClassroom = asyncHandler(async (req, res) => {
       classTime,
       schedule,
       students,
-    });
+    })
 
-    const classroom = await newClassroom.save();
+    const classroom = await newClassroom.save()
 
     classroom.students.map(async (enrollId) => {
-      const studentEnroll = await enrollCourse.findById(enrollId);
+      const studentEnroll = await enrollCourse.findById(enrollId)
 
       // Change enroll course status 1 -> 2
-      studentEnroll.status = 2;
+      studentEnroll.status = 2
 
-      await studentEnroll.save();
+      await studentEnroll.save()
 
-      const checkStudentAvailable = await Student.find().select("email");
+      const checkStudentAvailable = await Student.find().select('email')
 
-      let saveStudent;
+      let saveStudent
 
       const check = checkStudentAvailable.some((studentAvailable) => {
-        saveStudent = studentAvailable;
-        return studentAvailable.email === studentEnroll.email;
-      });
+        saveStudent = studentAvailable
+        return studentAvailable.email === studentEnroll.email
+      })
 
       if (check) {
         const newStudentAttendances = await new StudentAttendances({
           student: saveStudent._id,
           classroom: classroom._id,
-        });
+        })
 
-        await newStudentAttendances.save();
+        await newStudentAttendances.save()
 
-        sendEmailForClassroom(saveStudent.email, classroom);
+        sendEmailForClassroom(saveStudent.email, classroom)
       } else {
+        
         // Create new students
         const newStudent = await new Student({
           fullName: studentEnroll.fullName,
           email: studentEnroll.email,
           phoneNumber: studentEnroll.phoneNumber,
-        });
+        })
 
-        const student = await newStudent.save();
+        const student = await newStudent.save()
 
         // Create Student attendances
         const newStudentAttendances = await new StudentAttendances({
           student: student._id,
           classroom: classroom._id,
-        });
+        })
 
-        await newStudentAttendances.save();
+        await newStudentAttendances.save()
 
         // Send Email to Student
-        sendEmailForClassroom(student.email, classroom);
+        sendEmailForClassroom(student.email, classroom)
       }
-    });
+    })
 
-    res.json(classroom);
+    res.json(classroom)
   } catch (err) {
     console.error(err.message);
-    res.status(400).json("Classroom already exist");
+    res.status(500).send("Server Error");
   }
-});
+})
 
 // @desc    Delete a single classroom
 // @route   DELETE /api/classroom/:id
 // @access  Private/Teacher
 const deleteClassroom = asyncHandler(async (req, res) => {
-  const classroom = await Classroom.findById(req.params.id);
+  const classroom = await Classroom.findById(req.params.id)
 
   if (classroom) {
-    await Classroom.findByIdAndDelete(req.params.id);
-    res.json({ message: "Classroom removed" });
+    await Classroom.findByIdAndDelete(req.params.id)
+    res.json({ message: 'Classroom removed' })
   } else {
-    res.status(404);
-    throw new Error("Classroom not found");
+    res.status(404)
+    throw new Error('Classroom not found')
   }
-});
+})
 
 // @desc    Update a single classroom
 // @route   PUT /api/classrooms/:id
 // @access  Private/Teacher
 const updateClassroom = asyncHandler(async (req, res) => {
-  const errors = validationResult(req);
+  const errors = validationResult(req)
 
   if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
+    return res.status(400).json({ errors: errors.array() })
   }
 
   const {
@@ -207,89 +213,89 @@ const updateClassroom = asyncHandler(async (req, res) => {
     numberOfLessons,
     classTime,
     students,
-  } = req.body;
+  } = req.body
 
   const classroom = await Classroom.findById(req.params.id)
-    .populate("user", "fullName")
-    .populate("location", "name")
-    .populate("course", "name")
+    .populate('user', 'fullName')
+    .populate('location', 'name')
+    .populate('course', 'name')
     .populate({
-      path: "students",
-      populate: { path: "fullName" },
-    });
+      path: 'students',
+      populate: { path: 'fullName' },
+    })
 
   if (classroom) {
-    classroom.id = id;
-    classroom.user = user;
-    classroom.course = course;
-    classroom.location = location;
-    classroom.name = name;
-    classroom.startTime = startTime;
-    classroom.endTime = endTime;
-    classroom.numberOfLessons = numberOfLessons;
-    classroom.classTime = classTime;
-    classroom.students = students;
+    classroom.id = id
+    classroom.user = user
+    classroom.course = course
+    classroom.location = location
+    classroom.name = name
+    classroom.startTime = startTime
+    classroom.endTime = endTime
+    classroom.numberOfLessons = numberOfLessons
+    classroom.classTime = classTime
+    classroom.students = students
 
     classroom.students.map(async (enrollId) => {
-      const studentEnroll = await enrollCourse.findById(enrollId);
+      const studentEnroll = await enrollCourse.findById(enrollId)
 
       // Change enroll course status 1 -> 2
-      studentEnroll.status = 2;
+      studentEnroll.status = 2
 
-      await studentEnroll.save();
+      await studentEnroll.save()
 
-      const checkStudentAvailable = await Student.find().select("email");
+      const checkStudentAvailable = await Student.find().select('email')
 
-      let saveStudent;
+      let saveStudent
 
       const check = checkStudentAvailable.some((studentAvailable) => {
-        console.log(studentAvailable.email);
-        saveStudent = studentAvailable;
-        return studentAvailable.email === studentEnroll.email;
-      });
+        console.log(studentAvailable.email)
+        saveStudent = studentAvailable
+        return studentAvailable.email === studentEnroll.email
+      })
 
       if (check) {
-        console.log("Student ton tai");
+        console.log('Student ton tai')
         const newStudentAttendances = await new StudentAttendances({
           student: saveStudent._id,
           classroom: classroom._id,
-        });
+        })
 
-        await newStudentAttendances.save();
+        await newStudentAttendances.save()
 
-        sendEmailForClassroom(saveStudent.email, classroom);
+        sendEmailForClassroom(saveStudent.email, classroom)
       } else {
-        console.log("Tao student moi");
+        console.log('Tao student moi')
         // Create new students
         const newStudent = await new Student({
           fullName: studentEnroll.fullName,
           email: studentEnroll.email,
           phoneNumber: studentEnroll.phoneNumber,
-        });
+        })
 
-        const student = await newStudent.save();
+        const student = await newStudent.save()
 
         // Create Student attendances
         const newStudentAttendances = await new StudentAttendances({
           student: student._id,
           classroom: classroom._id,
-        });
+        })
 
-        await newStudentAttendances.save();
+        await newStudentAttendances.save()
 
         // Send Email to Student
-        sendEmailForClassroom(student.email, classroom);
+        sendEmailForClassroom(student.email, classroom)
       }
-    });
+    })
 
-    const updateClassroom = await classroom.save();
+    const updateClassroom = await classroom.save()
 
-    res.json(updateClassroom);
+    res.json(updateClassroom)
   } else {
-    res.status(404);
-    throw new Error("Classroom not found");
+    res.status(404)
+    throw new Error('Classroom not found')
   }
-});
+})
 
 module.exports = {
   getClassrooms,
@@ -298,4 +304,4 @@ module.exports = {
   createClassroom,
   deleteClassroom,
   updateClassroom,
-};
+}
