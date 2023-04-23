@@ -23,12 +23,14 @@ const sendEmailForClassroom = async (student, classroom) => {
             <img src="https://thumbs.gfycat.com/AgedMiniatureBoto-max-1mb.gif"/>
             <h2>THÔNG BÁO KHAI GIẢNG LỚP ${
               classroom.name
-            } (${classroom.startTime.toLocaleDateString()})</h2>
+            } (${classroom.startTime.toLocaleDateString("en-GB")})</h2>
             <h3>1. Lịch học</h3>
             <p>Lớp chúng ta sẽ học ${classroom.schedule.length} buổi vào tối ${
       classroom.schedule
     }</p>
-            <p><b>Thời gian khai giảng:</b> ${classroom.startTime.toLocaleDateString()}</p>
+            <p><b>Thời gian khai giảng:</b> ${classroom.startTime.toLocaleDateString(
+              "en-GB"
+            )}</p>
             <div><b>Mã lớp học:</b> ${classroom.name}</div>
             <h3>2. Tham gia vào nhóm lớp</h3>
             <p>Nhóm lớp là không gian chung để trao đổi giữa học viên với giảng viên, mentor và chuyên viên vận hành lớp học, bao gồm các thông tin quan trọng về hoạt động, các thay đổi và cập nhập quan trọng trong học kỳ. Đồng thời là nơi giao lưu và trao đổi kiến thức giữa các học viên của lớp.</p>
