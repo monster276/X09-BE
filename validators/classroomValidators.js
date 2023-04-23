@@ -61,12 +61,7 @@ const classroomValidators = [
     .not()
     .isEmpty()
     .withMessage("schedule can not be empty!"),
-  body("students")
-    .isArray()
-    .withMessage("students is array type")
-    .not()
-    .isEmpty()
-    .withMessage("students can not be empty!"),
+  body("students").isArray().withMessage("students is array type"),
 ];
 
 module.exports = classroomValidators;
