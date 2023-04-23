@@ -147,7 +147,7 @@ const createClassroom = asyncHandler(async (req, res) => {
 
         sendEmailForClassroom(saveStudent.email, classroom)
       } else {
-        console.log('Tao student moi')
+        
         // Create new students
         const newStudent = await new Student({
           fullName: studentEnroll.fullName,
@@ -172,8 +172,8 @@ const createClassroom = asyncHandler(async (req, res) => {
 
     res.json(classroom)
   } catch (err) {
-    console.error(err.message)
-    res.status(500).send('Server Error')
+    console.error(err.message);
+    res.status(400).json("Classroom already exist");
   }
 })
 
