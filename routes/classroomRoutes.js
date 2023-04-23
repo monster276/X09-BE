@@ -17,7 +17,7 @@ const {
 } = require("../controllers/classroomController");
 
 router.get("/", getClassrooms);
-router.get("/myclassrooms", getMyClassrooms);
+router.get("/myclassrooms", verifyToken, getMyClassrooms);
 router.get("/:id", getClassroomById);
 router.post("/", classroomValidators, createClassroom);
 router.delete("/:id", deleteClassroom);

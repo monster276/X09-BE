@@ -37,30 +37,36 @@ const classroomValidators = [
     .not()
     .isEmpty()
     .withMessage("startTime can not be empty!"),
-  body("endTime", "End Time is date, End Time is required")
+  body("endTime")
     .isDate()
     .withMessage("endTime is date type")
     .not()
     .isEmpty()
     .withMessage("endTime can not be empty!"),
-  body("numberOfLessons", "Number Of Lessons is number, User is required")
+  body("numberOfLessons")
     .isNumeric()
     .withMessage("numberOfLessons is number type")
     .not()
     .isEmpty()
     .withMessage("numberOfLessons can not be empty!"),
-  body("classTime", "Class Time is number, Class Time is required")
+  body("classTime")
     .isNumeric()
     .withMessage("classTime is number type")
     .not()
     .isEmpty()
     .withMessage("classTime can not be empty!"),
-  body("schedule", "Schedule is array, Schedule is required")
+  body("schedule")
     .isArray()
     .withMessage("schedule is array type")
     .not()
     .isEmpty()
     .withMessage("schedule can not be empty!"),
+  body("students")
+    .isArray()
+    .withMessage("students is array type")
+    .not()
+    .isEmpty()
+    .withMessage("students can not be empty!"),
 ];
 
 module.exports = classroomValidators;
