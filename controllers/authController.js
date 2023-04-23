@@ -2,19 +2,15 @@ const User = require('../models/User')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const { validationResult } = require('express-validator')
-
 let refreshTokens = []
-
 const authController = {
   //REGISTER
   createUser: async (req, res) => {
     const errors = validationResult(req)
-
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() })
     }
     try {
-      console.log('hello')
       const salt = await bcrypt.genSalt(10)
       const hashed = await bcrypt.hash(req.body.password, salt)
 
