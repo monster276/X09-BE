@@ -8,7 +8,7 @@ const router = require('express').Router()
 const { verifyToken } = require('../controllers/verifyToken')
 
 //CreateUser
-router.post('/create', validateUserCreate, authController.createUser)
+router.post('/create',validateUserCreate, authController.createUser)
 
 //REFRESH TOKEN
 router.post('/refresh', authController.requestRefreshToken)

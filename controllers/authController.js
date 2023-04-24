@@ -23,6 +23,7 @@ const authController = {
         fullName: req.body.fullName,
         isAdmin: req.body.isAdmin,
       })
+     
 
       //Save user to DB
       const user = await newUser.save()
