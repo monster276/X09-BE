@@ -5,14 +5,16 @@ exports.validateUserCreate = [
     .trim()
     .not()
     .isEmpty()
-    .withMessage('Không được bỏ trống!')
+    .withMessage('Username Không được bỏ trống!')
     .isString()
     .withMessage('Không đúng định dạng!')
     .isLength({ min: 3, max: 20 })
     .withMessage('Tối thiểu 3 kí tự và tối đa 20 kí tự!')
     .custom(async (username) => {
-      const existingUsername = await user.find({ username })
-      if (existingUsername) {
+      console.log(username)
+      const existingUsername = await user.find({ username: username })
+      console.log(existingUsername)
+      if (existingUsername.length > 0) {
         throw new Error('Username đã được sử dụng')
       }
     }),
@@ -21,8 +23,9 @@ exports.validateUserCreate = [
     .isEmail()
     .withMessage('Không đúng định dạng email!')
     .custom(async (email) => {
-      const existingUserEmail = await user.find({ email })
-      if (existingUserEmail) {
+      const existingUserEmail = await user.find({ email: email })
+      console.log(existingUserEmail)
+      if (existingUserEmail.length > 0) {
         throw new Error('Email đã được sử dụng')
       }
     }),
