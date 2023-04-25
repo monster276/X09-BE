@@ -176,7 +176,7 @@ const createClassroom = asyncHandler(async (req, res) => {
     res.json(classroom);
   } catch (err) {
     console.error(err.message);
-    res.status(400).json("Classroom already exist");
+    res.status(400).json({ message: "Classroom already exist" });
   }
 });
 
@@ -247,18 +247,15 @@ const updateClassroom = asyncHandler(async (req, res) => {
 
       await studentEnroll.save();
 
+      // Check students available
       const checkStudentAvailable = await Student.find().select("email");
-
       let saveStudent;
-
       const check = checkStudentAvailable.some((studentAvailable) => {
-        console.log(studentAvailable.email);
         saveStudent = studentAvailable;
         return studentAvailable.email === studentEnroll.email;
       });
 
       if (check) {
-        console.log("Student ton tai");
         const newStudentAttendances = await new StudentAttendances({
           student: saveStudent._id,
           classroom: classroom._id,
@@ -268,7 +265,6 @@ const updateClassroom = asyncHandler(async (req, res) => {
 
         sendEmailForClassroom(saveStudent.email, classroom);
       } else {
-        console.log("Tao student moi");
         // Create new students
         const newStudent = await new Student({
           fullName: studentEnroll.fullName,

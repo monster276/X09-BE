@@ -90,7 +90,7 @@ const createCourse = asyncHandler(async (req, res) => {
     res.json(course);
   } catch (err) {
     console.error(err.message);
-    res.status(400).json("Course is already exist");
+    res.status(400).json({ message: "Course is already exist" });
   }
 });
 

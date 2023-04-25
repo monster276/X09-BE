@@ -77,7 +77,7 @@ const createLocation = asyncHandler(async (req, res) => {
     res.json(location);
   } catch (err) {
     console.error(err.message);
-    res.status(400).json("Location is already exist");
+    res.status(400).json({ message: "Location is already exist" });
   }
 });
 
