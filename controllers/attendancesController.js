@@ -77,7 +77,7 @@ const createStudentAttendances = asyncHandler(async (req, res) => {
     res.json(studentAttendances);
   } catch (err) {
     console.error(err.message);
-    res.status(400).send("Student Attendance is already exist");
+    res.status(400).json({ message: "Student Attendance is already exist" });
   }
 });
 

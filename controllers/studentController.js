@@ -66,7 +66,7 @@ const createStudent = asyncHandler(async (req, res) => {
     res.json(student);
   } catch (error) {
     console.error(err.message);
-    res.status(400).json("Student is already exist");
+    res.status(400).json({ message: "Student is already exist" });
   }
 });
 
