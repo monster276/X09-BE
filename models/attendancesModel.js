@@ -2,20 +2,21 @@ const mongoose = require("mongoose");
 
 const attendanceSchema = mongoose.Schema({
   lesson: {
-    type: Date,
-    required: true,
+    type: String,
+    default: "",
   },
   presence: {
-    type: Number,
-    required: true,
+    type: String,
+    default: "",
   },
   score: {
     type: Number,
     required: true,
+    default: 0,
   },
   comment: {
     type: String,
-    required: false,
+    default: "",
   },
 });
 
@@ -30,7 +31,7 @@ const studentAttendanceSchema = mongoose.Schema({
     required: true,
     ref: "Classroom",
   },
-  attendances: [attendanceSchema],
+  attendances: [],
   createAt: {
     type: Date,
     default: Date.now,
