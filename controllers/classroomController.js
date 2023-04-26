@@ -261,7 +261,25 @@ const updateClassroom = asyncHandler(async (req, res) => {
           classroom: classroom._id,
         });
 
-        await newStudentAttendances.save();
+        // Check Students Attendances available
+        const studentsAttendances = await StudentAttendances.find({});
+        const checkStudentsAttendances = studentsAttendances.some(
+          (studentAttendances) => {
+            console.log(
+              newStudentAttendances[("student", "classroom")].toString()
+            );
+            return (
+              studentAttendances[("student", "classroom")].toString() ===
+              newStudentAttendances[("student", "classroom")].toString()
+            );
+          }
+        );
+
+        console.log(checkStudentsAttendances);
+
+        if (!checkStudentsAttendances) {
+          await newStudentAttendances.save();
+        }
 
         sendEmailForClassroom(saveStudent.email, classroom);
       } else {
