@@ -7,14 +7,14 @@ const studentAttendance = [
 
 const attendances = [
   body("lesson")
-    .isDate()
-    .withMessage("lesson is date type")
+    .isString()
+    .withMessage("lesson is string type")
     .not()
     .isEmpty()
     .withMessage("lesson can not be empty!"),
   body("presence")
-    .isNumeric()
-    .withMessage("presence is number type")
+    .isString()
+    .withMessage("presence is string type")
     .not()
     .isEmpty()
     .withMessage("presence can not be empty!"),
