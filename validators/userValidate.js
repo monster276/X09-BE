@@ -13,7 +13,6 @@ exports.validateUserCreate = [
     .custom(async (username) => {
       console.log(username)
       const existingUsername = await user.find({ username: username })
-      console.log(existingUsername)
       if (existingUsername.length > 0) {
         throw new Error('Username đã được sử dụng')
       }
@@ -24,7 +23,6 @@ exports.validateUserCreate = [
     .withMessage('Không đúng định dạng email!')
     .custom(async (email) => {
       const existingUserEmail = await user.find({ email: email })
-      console.log(existingUserEmail)
       if (existingUserEmail.length > 0) {
         throw new Error('Email đã được sử dụng')
       }
