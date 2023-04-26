@@ -147,7 +147,20 @@ const createClassroom = asyncHandler(async (req, res) => {
           classroom: classroom._id,
         });
 
-        await newStudentAttendances.save();
+        if (
+          newStudentAttendances.classroom.toString() ===
+          classroom._id.toString()
+        ) {
+          for (let i = 1; i <= classroom.numberOfLessons; i++) {
+            newStudentAttendances.attendances.push({
+              lesson: `Buổi ${i}`,
+              presence: "",
+              score: 0,
+              comment: "",
+            });
+          }
+          await newStudentAttendances.save();
+        }
 
         sendEmailForClassroom(saveStudent.email, classroom);
       } else {
@@ -166,7 +179,20 @@ const createClassroom = asyncHandler(async (req, res) => {
           classroom: classroom._id,
         });
 
-        await newStudentAttendances.save();
+        if (
+          newStudentAttendances.classroom.toString() ===
+          classroom._id.toString()
+        ) {
+          for (let i = 1; i <= classroom.numberOfLessons; i++) {
+            newStudentAttendances.attendances.push({
+              lesson: `Buổi ${i}`,
+              presence: "",
+              score: 0,
+              comment: "",
+            });
+          }
+          await newStudentAttendances.save();
+        }
 
         // Send Email to Student
         sendEmailForClassroom(student.email, classroom);
@@ -261,6 +287,20 @@ const updateClassroom = asyncHandler(async (req, res) => {
           classroom: classroom._id,
         });
 
+        if (
+          newStudentAttendances.classroom.toString() ===
+          classroom._id.toString()
+        ) {
+          for (let i = 1; i <= classroom.numberOfLessons; i++) {
+            newStudentAttendances.attendances.push({
+              lesson: `Buổi ${i}`,
+              presence: "",
+              score: 0,
+              comment: "",
+            });
+          }
+        }
+
         // Check Students Attendances available
         const studentsAttendances = await StudentAttendances.find({});
         const checkStudentsAttendances = studentsAttendances.some(
@@ -298,7 +338,39 @@ const updateClassroom = asyncHandler(async (req, res) => {
           classroom: classroom._id,
         });
 
-        await newStudentAttendances.save();
+        if (
+          newStudentAttendances.classroom.toString() ===
+          classroom._id.toString()
+        ) {
+          for (let i = 1; i <= classroom.numberOfLessons; i++) {
+            newStudentAttendances.attendances.push({
+              lesson: `Buổi ${i}`,
+              presence: "",
+              score: 0,
+              comment: "",
+            });
+          }
+        }
+
+        // Check Students Attendances available
+        const studentsAttendances = await StudentAttendances.find({});
+        const checkStudentsAttendances = studentsAttendances.some(
+          (studentAttendances) => {
+            console.log(
+              newStudentAttendances[("student", "classroom")].toString()
+            );
+            return (
+              studentAttendances[("student", "classroom")].toString() ===
+              newStudentAttendances[("student", "classroom")].toString()
+            );
+          }
+        );
+
+        console.log(checkStudentsAttendances);
+
+        if (!checkStudentsAttendances) {
+          await newStudentAttendances.save();
+        }
 
         // Send Email to Student
         sendEmailForClassroom(student.email, classroom);
