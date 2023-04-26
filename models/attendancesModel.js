@@ -31,7 +31,7 @@ const studentAttendanceSchema = mongoose.Schema({
     required: true,
     ref: "Classroom",
   },
-  attendances: [],
+  attendances: [attendanceSchema],
   createAt: {
     type: Date,
     default: Date.now,
