@@ -157,6 +157,7 @@ const createClassroom = asyncHandler(async (req, res) => {
               presence: "",
               score: 0,
               comment: "",
+              index: String(i - 1),
             });
           }
           await newStudentAttendances.save();
@@ -189,6 +190,7 @@ const createClassroom = asyncHandler(async (req, res) => {
               presence: "",
               score: 0,
               comment: "",
+              index: String(i - 1),
             });
           }
           await newStudentAttendances.save();
@@ -297,6 +299,7 @@ const updateClassroom = asyncHandler(async (req, res) => {
               presence: "",
               score: 0,
               comment: "",
+              index: String(i - 1),
             });
           }
         }
@@ -348,6 +351,7 @@ const updateClassroom = asyncHandler(async (req, res) => {
               presence: "",
               score: 0,
               comment: "",
+              index: String(i - 1),
             });
           }
         }

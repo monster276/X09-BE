@@ -3,7 +3,6 @@ const mongoose = require("mongoose");
 const attendanceSchema = mongoose.Schema({
   lesson: {
     type: String,
-    default: "",
   },
   presence: {
     type: String,
@@ -11,12 +10,14 @@ const attendanceSchema = mongoose.Schema({
   },
   score: {
     type: Number,
-    required: true,
     default: 0,
   },
   comment: {
     type: String,
     default: "",
+  },
+  index: {
+    type: String,
   },
 });
 
