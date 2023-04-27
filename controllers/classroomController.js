@@ -303,14 +303,14 @@ const updateClassroom = asyncHandler(async (req, res) => {
 
         // Check Students Attendances available
         const studentsAttendances = await StudentAttendances.find({});
+
         const checkStudentsAttendances = studentsAttendances.some(
           (studentAttendances) => {
-            console.log(
-              newStudentAttendances[("student", "classroom")].toString()
-            );
             return (
-              studentAttendances[("student", "classroom")].toString() ===
-              newStudentAttendances[("student", "classroom")].toString()
+              studentAttendances.student.toString() ===
+                newStudentAttendances.student.toString() &&
+              studentAttendances.classroom.toString() ===
+                newStudentAttendances.classroom.toString()
             );
           }
         );
@@ -354,14 +354,14 @@ const updateClassroom = asyncHandler(async (req, res) => {
 
         // Check Students Attendances available
         const studentsAttendances = await StudentAttendances.find({});
+
         const checkStudentsAttendances = studentsAttendances.some(
           (studentAttendances) => {
-            console.log(
-              newStudentAttendances[("student", "classroom")].toString()
-            );
             return (
-              studentAttendances[("student", "classroom")].toString() ===
-              newStudentAttendances[("student", "classroom")].toString()
+              studentAttendances.student.toString() ===
+                newStudentAttendances.student.toString() &&
+              studentAttendances.classroom.toString() ===
+                newStudentAttendances.classroom.toString()
             );
           }
         );
