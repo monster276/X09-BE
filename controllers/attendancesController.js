@@ -155,11 +155,42 @@ const updateStudentAttendances = asyncHandler(async (req, res) => {
   }
 });
 
+// @desc    Create new attendances
+// @route   POST /api/attendances/:id/attendance
+// @access  Private/Teacher
+const updateAttendances = asyncHandler(async (req, res) => {
+  const errors = validationResult(req);
+
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+
+  const { presence, score, comment } = req.body;
+
+  const studentAttendances = await StudentAttendances.findById(req.params.id);
+  const attendance = await studentAttendances.attendances[req.params.index];
+
+  if (studentAttendances) {
+    attendance.presence = presence;
+    attendance.score = score;
+    attendance.comment = comment;
+
+    const updateAttendance = await studentAttendances.save();
+    res.json({ updateAttendance });
+
+    res.status(201).json({ message: "attendance updated" });
+  } else {
+    res.status(404);
+    throw new Error("Attendance not found");
+  }
+});
+
 module.exports = {
   getStudentsAttendances,
   getStudentAttendancesById,
   createStudentAttendances,
   createAttendances,
+  updateAttendances,
   deleteStudentAttendances,
   updateStudentAttendances,
 };

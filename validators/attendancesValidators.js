@@ -6,12 +6,6 @@ const studentAttendance = [
 ];
 
 const attendances = [
-  body("lesson")
-    .isString()
-    .withMessage("lesson is string type")
-    .not()
-    .isEmpty()
-    .withMessage("lesson can not be empty!"),
   body("presence")
     .isString()
     .withMessage("presence is string type")
