@@ -17,7 +17,8 @@ const courseSchema = mongoose.Schema({
   },
   image: {
     type: String,
-    required: true,
+    required: false,
+    default: "https://fireship.io/img/default-cover.png",
   },
   courseTime: {
     type: String,
