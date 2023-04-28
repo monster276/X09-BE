@@ -22,13 +22,6 @@ const courseValidators = [
     .isEmpty()
     .withMessage("description can not be empty!"),
 
-  body("image")
-    .isString()
-    .withMessage("Image is string type")
-    .not()
-    .isEmpty()
-    .withMessage("image can not be empty!"),
-
   body("courseTime")
     .isString()
     .withMessage("courseTime is string type")
