@@ -16,11 +16,11 @@ const {
   updateClassroom,
 } = require("../controllers/classroomController");
 
-router.get("/", getClassrooms);
+router.get("/", verifyTokenAndAdmin, getClassrooms);
 router.get("/myclassrooms", verifyToken, getMyClassrooms);
-router.get("/:id", getClassroomById);
-router.post("/", classroomValidators, createClassroom);
-router.delete("/:id", deleteClassroom);
-router.put("/:id", classroomValidators, updateClassroom);
+router.get("/:id", verifyTokenAndAdmin, getClassroomById);
+router.post("/", verifyTokenAndAdmin, classroomValidators, createClassroom);
+router.delete("/:id", verifyTokenAndAdmin, deleteClassroom);
+router.put("/:id", verifyTokenAndAdmin, classroomValidators, updateClassroom);
 
 module.exports = router;
