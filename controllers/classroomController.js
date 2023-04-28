@@ -56,13 +56,41 @@ const getClassrooms = asyncHandler(async (req, res) => {
 // @route   GET /api/classrooms/myclassrooms
 // @access  Private/Teacher
 const getMyClassrooms = asyncHandler(async (req, res) => {
+  const pageSize = 10;
+  let page = Number(req.query.pageNumber) || 1;
+
+  const keyword = req.query.keyword
+    ? {
+        $or: [
+          {
+            id: {
+              $regex: req.query.keyword,
+              $options: "x",
+            },
+          },
+          {
+            name: {
+              $regex: req.query.keyword,
+              $options: "x",
+            },
+          },
+        ],
+      }
+    : {};
+
+  const count = await Classroom.countDocuments({ ...keyword });
+
   const classrooms = await Classroom.find({ user: req.user._id })
+    .sort({ createAt: -1 })
+    .find({ ...keyword })
+    .limit(pageSize)
+    .skip(pageSize * (page - 1))
     .populate("user", "fullName")
     .populate("location", "name")
     .populate("course", "name")
     .populate({ path: "students", populate: { path: "fullName" } });
 
-  res.json(classrooms);
+  res.json({ classrooms, page, pages: Math.ceil(count / pageSize) });
 });
 
 // @desc    Fetch a single classroom
