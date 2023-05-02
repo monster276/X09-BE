@@ -1,12 +1,11 @@
-const mongoose = require('mongoose')
-const mongoosePaginate = require('mongoose-paginate-v2');
+const mongoose = require("mongoose");
+const mongoosePaginate = require("mongoose-paginate-v2");
 
 const enrollCourseSchema = new mongoose.Schema(
   {
     fullName: {
       type: String,
       required: true,
-      unique: true,
     },
     email: {
       type: String,
@@ -19,21 +18,21 @@ const enrollCourseSchema = new mongoose.Schema(
     location: {
       type: mongoose.Schema.Types.ObjectId,
       required: true,
-      ref: 'Location',
+      ref: "Location",
     },
     course: {
       type: mongoose.Schema.Types.ObjectId,
       required: true,
-      ref: 'Course',
+      ref: "Course",
     },
     status: {
       type: Number,
-      default: '1',
+      default: "1",
       required: true,
     },
   },
-  { timestamps: true },
-)
+  { timestamps: true }
+);
 enrollCourseSchema.plugin(mongoosePaginate);
-const enrollCourse = mongoose.model('enrollCourse', enrollCourseSchema)
-module.exports = enrollCourse
+const enrollCourse = mongoose.model("enrollCourse", enrollCourseSchema);
+module.exports = enrollCourse;
