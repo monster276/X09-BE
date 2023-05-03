@@ -19,8 +19,8 @@ const {
 router.get("/", getClassrooms);
 router.get("/myclassrooms", verifyToken, getMyClassrooms);
 router.get("/:id", getClassroomById);
-router.post("/", classroomValidators, createClassroom);
+router.post("/", createClassroom);
 router.delete("/:id", deleteClassroom);
-router.put("/:id", classroomValidators, updateClassroom);
+router.put("/:id", updateClassroom);
 
 module.exports = router;
