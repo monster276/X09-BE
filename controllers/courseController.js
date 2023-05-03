@@ -1,6 +1,7 @@
 const Course = require("../models/courseModel");
 const asyncHandler = require("express-async-handler");
 const { validationResult } = require("express-validator");
+const cloudinary = require("../utils/cloudinary");
 
 // @desc    Fetch all courses
 // @route   GET /api/courses
@@ -74,11 +75,14 @@ const createCourse = asyncHandler(async (req, res) => {
   } = req.body;
 
   try {
+    const result = await cloudinary.uploader.upload(image, {
+      folder: "courseImages",
+    });
     const newCourse = new Course({
       id,
       name,
       description,
-      image,
+      image: result.secure_url,
       courseTime,
       classTime,
       maxNumberOfStudents,
@@ -150,10 +154,17 @@ const updateCourse = asyncHandler(async (req, res) => {
   }
 });
 
+const getNewCourses = asyncHandler(async (req, res) => {
+  const courses = await Course.find({}).sort({ createAt: -1 }).limit(6);
+
+  res.json(courses);
+});
+
 module.exports = {
   getCourses,
   getCourseById,
   createCourse,
   deleteCourse,
   updateCourse,
+  getNewCourses,
 };
