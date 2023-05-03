@@ -8,9 +8,11 @@ const {
   createCourse,
   deleteCourse,
   updateCourse,
+  getNewCourses,
 } = require("../controllers/courseController");
 
 router.get("/", getCourses);
+router.get("/top", getNewCourses);
 router.get("/:id", getCourseById);
 router.post("/", courseValidators, createCourse);
 router.delete("/:id", deleteCourse);
