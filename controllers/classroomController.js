@@ -34,13 +34,7 @@ const getClassrooms = asyncHandler(async (req, res) => {
     : {};
 
   const count = await Classroom.countDocuments({ ...keyword });
-  const queryObj = { ...req.query };
-  const excludeFields = ["page", "sort", "limit", "fields"];
-  excludeFields.forEach((el) => delete queryObj[el]);
-  let queryStr = JSON.stringify(queryObj);
-  queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, (match) => `$${match}`);
   const classrooms = await Classroom.find({ ...keyword })
-    .find(JSON.parse(queryStr))
     .sort({ createAt: -1 })
     .populate("user", "fullName")
     .populate("location", "name")
